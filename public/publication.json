@@ -1,6 +1,5 @@
 {
-  "paperUrl": "/media/v1/paper.pdf",
+  "paperUrl": null,
   "title": "AssemblyWorld: Rethinking 3D Assembly with General-Purpose Agents",
-  "version": "Author manuscript, 2026-09-29",
-  "sha256": "f765910996ba261e6d6ac8d6f141f9ddc8a0b6bfc88bb1d02f7f3f0c5765fdf0"
+  "version": "arXiv forthcoming"
 }

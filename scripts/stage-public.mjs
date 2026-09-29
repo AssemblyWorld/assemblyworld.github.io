@@ -19,7 +19,8 @@ for (const name of [
 await fs.cp("public/licenses", "dist/licenses", { recursive: true });
 for (const c of catalog.cases) {
   const dir = path.dirname(c.initial.slice(1));
-  if (!/^media\/v1\/[a-z0-9-]+$/.test(dir)) throw Error("Unsafe case path");
+  if (!/^media\/v[0-9]+\/[a-z0-9-]+$/.test(dir))
+    throw Error("Unsafe case path");
   await fs.cp(path.join("public", dir), path.join("dist", dir), {
     recursive: true,
   });
@@ -27,5 +28,3 @@ for (const c of catalog.cases) {
 console.log(
   `Staged ${catalog.cases.length} cleared cases. Local-only previews excluded.`,
 );
-
-await fs.copyFile("public/media/v1/paper.pdf", "dist/media/v1/paper.pdf");

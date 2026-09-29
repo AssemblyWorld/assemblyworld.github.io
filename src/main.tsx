@@ -7,17 +7,22 @@ const ENV = "https://assemblyworld.github.io/3DWebAgent/";
 const README =
   "https://github.com/AssemblyWorld/3DWebAgent#connect-through-webmcp";
 const CODE = "https://github.com/AssemblyWorld/assembly-world-agent";
-const DATA =
-  "https://github.com/AssemblyWorld/assembly-world-agent/tree/main/benchmarks/assemblyworldbench";
+const DATA = "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench";
+const RESULTS =
+  "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench-Results";
 const authors = [
-  ["Jiahao Zhang", "1,*"],
-  ["Yeying Fan", "3,*"],
-  ["Moitreya Chatterjee", "2"],
-  ["Suhas Lohit", "2"],
-  ["Bernhard Egger", "4"],
-  ["Tim K. Marks", "2"],
-  ["Anoop Cherian", "2"],
-  ["Stephen Gould", "1"],
+  ["Jiahao Zhang", "1,*", "https://davidzhang73.github.io/"],
+  ["Yeying Fan", "3,*", "https://www.researchgate.net/profile/Yeying-Fan"],
+  [
+    "Moitreya Chatterjee",
+    "2",
+    "https://sites.google.com/site/metrosmiles/home",
+  ],
+  ["Suhas Lohit", "2", "https://suhaslohit.github.io/"],
+  ["Bernhard Egger", "4", "https://eggerbernhard.ch/"],
+  ["Tim K. Marks", "2", "https://www.merl.com/people/tmarks"],
+  ["Anoop Cherian", "2", "https://users.cecs.anu.edu.au/~cherian/"],
+  ["Stephen Gould", "1", "https://users.cecs.anu.edu.au/~sgould/"],
 ];
 const results = [
   ["GPT-6 Astra", 59.4],
@@ -159,25 +164,47 @@ function App() {
             world.
           </p>
           <div className="authors">
-            {authors.map(([name, aff]) => (
+            {authors.map(([name, aff, url]) => (
               <span key={name}>
-                {name}
+                <a href={url} target="_blank" rel="noreferrer">
+                  {name}
+                </a>
                 <sup>{aff}</sup>
               </span>
             ))}
           </div>
           <div className="affiliations">
             <span>
-              <sup>1</sup> Australian National University
+              <sup>1</sup>{" "}
+              <a
+                href="https://www.anu.edu.au/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Australian National University
+              </a>
             </span>
             <span>
-              <sup>2</sup> Mitsubishi Electric Research Laboratories
+              <sup>2</sup>{" "}
+              <a href="https://www.merl.com/" target="_blank" rel="noreferrer">
+                Mitsubishi Electric Research Laboratories
+              </a>
             </span>
             <span>
-              <sup>3</sup> Tsinghua University
+              <sup>3</sup>{" "}
+              <a
+                href="https://www.tsinghua.edu.cn/en/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Tsinghua University
+              </a>
             </span>
             <span>
-              <sup>4</sup> FAU Erlangen-Nürnberg
+              <sup>4</sup>{" "}
+              <a href="https://www.fau.eu/" target="_blank" rel="noreferrer">
+                FAU Erlangen-Nürnberg
+              </a>
             </span>
           </div>
           <p className="equal">* Equal contribution</p>
@@ -187,13 +214,18 @@ function App() {
                 Read the paper ↗
               </a>
             ) : (
-              <span className="button unavailable">Paper · forthcoming</span>
+              <span className="button unavailable">
+                Read the paper · arXiv forthcoming
+              </span>
             )}
             <a className="button" href={CODE}>
               Code ↗
             </a>
             <a className="button" href={DATA}>
-              Benchmark ↗
+              Benchmark · coming soon ↗
+            </a>
+            <a className="button" href={RESULTS}>
+              Results ↗
             </a>
             <a className="button accent" href="#gallery">
               Explore in 3D ↓
@@ -271,11 +303,23 @@ function App() {
             </p>
           </div>
           <div className="gallery-toolbar">
-            <div className="filters" aria-label="Filter examples">
-              {["All", "Furniture", "Industrial", "Fracture"].map((f) => (
+            <div
+              className="filters"
+              role="tablist"
+              aria-label="Dataset examples"
+            >
+              {[
+                "All",
+                "IKEA-Manual",
+                "Fantastic Breaks",
+                "AssemblyBench",
+                "PartNet",
+              ].map((f) => (
                 <button
                   key={f}
-                  aria-pressed={filter === f}
+                  role="tab"
+                  aria-selected={filter === f}
+                  aria-controls="dataset-examples"
                   onClick={() => setFilter(f)}
                 >
                   {f}
@@ -284,15 +328,20 @@ function App() {
             </div>
             <span>
               {
-                cases.filter((c) => filter === "All" || c.domain === filter)
+                cases.filter((c) => filter === "All" || c.dataset === filter)
                   .length
               }{" "}
               interactive examples
             </span>
           </div>
-          <div className="cards">
+          <div
+            className="cards"
+            id="dataset-examples"
+            role="tabpanel"
+            aria-label={`${filter} examples`}
+          >
             {cases
-              .filter((c) => filter === "All" || c.domain === filter)
+              .filter((c) => filter === "All" || c.dataset === filter)
               .map((c, i) => (
                 <button
                   className={"case-card " + (c.id === selected ? "active" : "")}
@@ -316,6 +365,7 @@ function App() {
                   </div>
                   <div className="card-text">
                     <div className="card-meta">
+                      {c.featured ? "Paper example · " : ""}
                       {c.dataset} <span>{c.parts} parts</span>
                     </div>
                     <h3>{c.title}</h3>
@@ -331,7 +381,7 @@ function App() {
                 </button>
               ))}
           </div>
-          {!cases.filter((c) => filter === "All" || c.domain === filter)
+          {!cases.filter((c) => filter === "All" || c.dataset === filter)
             .length && (
             <p className="empty">
               Interactive examples for this domain are being prepared for public
@@ -555,9 +605,14 @@ function App() {
             <a href={DATA}>
               <span>03</span>
               <h3>Benchmark & data ↗</h3>
-              <p>Task definitions and source-specific dataset access.</p>
+              <p>Hugging Face benchmark · coming soon.</p>
             </a>
           </div>
+          <p>
+            <a className="inline-link" href={RESULTS}>
+              Recorded results on Hugging Face ↗
+            </a>
+          </p>
           <p>
             <a
               className="inline-link"

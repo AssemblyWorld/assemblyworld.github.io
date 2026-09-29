@@ -10,7 +10,9 @@ export default function Viewer({ item }: { item: Case }) {
     [playing, setPlaying] = useState([false, false]),
     [mode, setMode] = useState<ViewMode>("final"),
     [selected, setSelected] = useState(""),
-    [reset, setReset] = useState(0);
+    [reset, setReset] = useState(0),
+    [showCamera, setShowCamera] = useState(false),
+    [followCamera, setFollowCamera] = useState(false);
   const variants = useMemo(
     () => item.variants.slice(0, compare ? 2 : 1),
     [item, compare],
@@ -100,6 +102,7 @@ export default function Viewer({ item }: { item: Case }) {
           onClick={() => {
             setReset((n) => n + 1);
             setSelected("");
+            setFollowCamera(false);
           }}
         >
           ↺ Reset view
@@ -116,6 +119,8 @@ export default function Viewer({ item }: { item: Case }) {
             fallback={<div className="load-state">Preparing 3D view…</div>}
           >
             <Stage
+              showCamera={showCamera}
+              followCamera={followCamera}
               runs={runs}
               cursors={cursors}
               mode={mode}
@@ -132,8 +137,9 @@ export default function Viewer({ item }: { item: Case }) {
           </div>
         )}
         <div className="stage-note">
-          DRAG TO ORBIT <span>·</span> SCROLL TO ZOOM <span>·</span> CLICK A
-          PART
+          {followCamera
+            ? "RECORDED CAMERA · 4:3 VIEW · TURN OFF FOLLOW TO ORBIT"
+            : "DRAG TO ORBIT · SCROLL TO ZOOM · CLICK A PART"}
         </div>
         {compare && (
           <div className="pane-labels">
@@ -178,6 +184,22 @@ export default function Viewer({ item }: { item: Case }) {
             Compare agents
           </label>
         )}
+        <label className="compare-toggle">
+          <input
+            type="checkbox"
+            checked={showCamera}
+            onChange={(e) => setShowCamera(e.target.checked)}
+          />{" "}
+          Show agent camera
+        </label>
+        <label className="compare-toggle">
+          <input
+            type="checkbox"
+            checked={followCamera}
+            onChange={(e) => setFollowCamera(e.target.checked)}
+          />{" "}
+          Follow agent camera
+        </label>
         <label className="part-select">
           Highlight{" "}
           <select
@@ -283,6 +305,9 @@ export default function Viewer({ item }: { item: Case }) {
         Real recorded steps, without interpolated motion. Part colors are for
         presentation. All views use the final evaluation’s global rigid
         alignment. {mode === "overlay" ? "Teal wireframe: ground truth. " : ""}
+        {followCamera
+          ? "Following each run’s recorded camera pose and field of view; appearance is re-rendered. "
+          : ""}
         Free-space geometry; physical stability is not evaluated.
       </p>
     </div>

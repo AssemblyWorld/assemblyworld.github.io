@@ -16,7 +16,7 @@ with tarfile.open(fileobj=io.BytesIO(payload), mode='r:gz') as tar:
     for member in tar.getmembers():
         path = Path(member.name)
         assert not path.is_absolute() and '..' not in path.parts and not member.issym() and not member.islnk()
-        assert len(path.parts) >= 3 and path.parts[:2] == ('media','v1')
+        assert len(path.parts) >= 3 and path.parts[:2] == ('media',lock.get('mediaVersion','v1'))
         assert path.parts[2] in lock['cases'] or path.parts[2] in ('paper.pdf', 'licenses', 'ASSET_TERMS.html', 'catalog.json')
     tar.extractall(root / 'public', filter='data')
 print('Verified and extracted public asset release:', lock['sha256'])

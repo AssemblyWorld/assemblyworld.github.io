@@ -7,3 +7,5 @@ public/catalog.local.json
 __pycache__/
 test-results/
 playwright-report/
+
+*.tsbuildinfo

@@ -1,11 +1,21 @@
 {
   "version": 1,
-  "url": "https://github.com/AssemblyWorld/assemblyworld.github.io/releases/download/assets-v1/media-v1.tar.gz",
-  "sha256": "fbc8d8a8b63aa5d0663bc300665dc35385a0d905aff44a445b8be1eafd4b5a0a",
-  "bytes": 4857680,
+  "mediaVersion": "v2",
+  "url": "https://github.com/AssemblyWorld/assemblyworld.github.io/releases/download/assets-v2/media-v2.tar.gz",
+  "sha256": "a46eb28c642337b5145e3ea69197f2c3ae4b4e3bcc9b07bd26936ecf81f370bc",
+  "bytes": 644621688,
   "cases": [
+    "ikea-bench-applaro",
+    "fantastic-00-00017",
+    "assemblybench-1047",
     "assemblybench-7355",
     "assemblybench-1386",
-    "assemblybench-4492"
+    "ikea-chair-falholmen",
+    "ikea-chair-jokkmokk",
+    "partnet-23890",
+    "partnet-40074",
+    "partnet-23814",
+    "fantastic-05-05005",
+    "fantastic-19-19003"
   ]
 }

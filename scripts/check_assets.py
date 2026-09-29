@@ -36,6 +36,12 @@ for case in catalog['cases']:
             assert end <= len(data)
             indices = struct.unpack_from('<' + 'I' * p['indexCount'], data, p['indexOffset'])
             assert max(indices) < p['positionCount'] // 3
+        assert run['cameras'].keys() == run['states'].keys()
+        for camera in run['cameras'].values():
+            assert all(len(camera[k]) == 3 for k in ('position', 'target', 'up'))
+            assert abs(sum(x*x for x in camera['up'])-1) < 1e-8
+            assert 0 < camera['fov'] < 180
+            assert sum((x-y)**2 for x,y in zip(camera['position'], camera['target'])) > 1e-10
         for poses in [*run['states'].values(), run['groundTruth']]:
             assert len(poses) == case['parts']
             for pose in poses:

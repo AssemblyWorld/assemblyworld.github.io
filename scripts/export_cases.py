@@ -18,18 +18,18 @@ from scipy.spatial.transform import Rotation
 ROOT = Path(__file__).resolve().parents[1]
 SYSTEMS = {"gpt-6-astra": "GPT-6 Astra", "claude-fable-5-1": "Claude Fable 5.1"}
 SELECTION = [
+    ("ikea-manualbook", "Bench/applaro", "APPLARO bench", True),
+    ("fantastic-breaks-none", "00/00017", "Fracture 00/00017", True),
+    ("assemblybench-manualbook", "1047", "Industrial assembly 1047", True),
     ("assemblybench-manualbook", "7355", "Industrial assembly 7355", True),
     ("assemblybench-manualbook", "1386", "Industrial assembly 1386", True),
-    ("assemblybench-manualbook", "4492", "Industrial assembly 4492", True),
-    ("ikea-manualbook", "Bench/applaro", "APPLARO bench", False),
-    ("ikea-manualbook", "Chair/falholmen", "FALHOLMEN chair", False),
-    ("ikea-manualbook", "Chair/jokkmokk", "JOKKMOKK chair", False),
-    ("partnet-final-image", "23890", "PartNet object 23890", False),
-    ("partnet-final-image", "40074", "PartNet object 40074", False),
-    ("partnet-final-image", "23814", "PartNet object 23814", False),
-    ("fantastic-breaks-none", "00/00017", "Fracture 00/00017", False),
-    ("fantastic-breaks-none", "05/05005", "Fracture 05/05005", False),
-    ("fantastic-breaks-none", "19/19003", "Fracture 19/19003", False),
+    ("ikea-manualbook", "Chair/falholmen", "FALHOLMEN chair", True),
+    ("ikea-manualbook", "Chair/jokkmokk", "JOKKMOKK chair", True),
+    ("partnet-final-image", "23890", "PartNet object 23890", True),
+    ("partnet-final-image", "40074", "PartNet object 40074", True),
+    ("partnet-final-image", "23814", "PartNet object 23814", True),
+    ("fantastic-breaks-none", "05/05005", "Fracture 05/05005", True),
+    ("fantastic-breaks-none", "19/19003", "Fracture 19/19003", True),
 ]
 DATASETS = {
     "assemblybench-manualbook": ("AssemblyBench", "Industrial", "Assembly manual"),
@@ -93,7 +93,7 @@ def export_run(archive, metrics, cache):
     # The published evaluator aligns prediction/divisor to target/divisor.
     align = np.array(metrics["alignment"]["rotation"])
     shift = np.array(metrics["alignment"]["translation"]) * metrics["scale_divisor"]
-    states, maximum_error = {}, 0.0
+    states, cameras, maximum_error = {}, {}, 0.0
     for row, state in zip(rows, binary):
         if row["kind"] == "trace":
             continue
@@ -107,13 +107,18 @@ def export_run(archive, metrics, cache):
             maximum_error = max(maximum_error, float(np.max(np.abs(align.T @ (pos-shift)-data.xpos[body]))))
             assert np.allclose(align.T @ Rotation.from_quat(poses[-1][3:]).as_matrix(), data.xmat[body].reshape(3,3), atol=1e-10)
         states[str(row["index"])] = poses
+        camera = row["camera"]
+        cameras[str(row["index"])] = dict(
+            position=(align @ np.asarray(camera["position"]) + shift).tolist(),
+            target=(align @ np.asarray(camera["target"]) + shift).tolist(),
+            up=(align @ np.array([0., 0., 1.])).tolist(), fov=38)
     assert str(metrics["state_index"]) in states
     assert int(max(states, key=int)) == metrics["state_index"]
     calls = [{k: c[k] for k in ("index", "name", "arguments", "state_index", "status", "timestamp")}
         for c in map(json.loads, files["calls.jsonl"].splitlines())]
     assert all(str(c["state_index"]) in states for c in calls)
     gt = [[*cache["gt_poses"][pid][:3], *np.roll(cache["gt_poses"][pid][3:], -1).tolist()] for pid in cache["part_ids"]]
-    return dict(version=1, parts=parts, states=states, calls=calls, groundTruth=gt,
+    return dict(version=1, parts=parts, states=states, cameras=cameras, calls=calls, groundTruth=gt,
         finalState=metrics["state_index"], alignment=dict(rotation=align.tolist(), translation=shift.tolist()),
         validation=dict(archiveSHA256=sha(archive), restoredStates=len(states), inversePoseMaxError=maximum_error,
             geometry="full compiled triangles in body-local coordinates", interpolation="none", quaternion="xyzw"))
@@ -125,22 +130,26 @@ def main():
     args = ap.parse_args()
     root = args.agent_root.resolve()
     catalog, audits = [], []
-    out = ROOT / "public/media/v1"
+    out = ROOT / "public/media/v2"
     for block, sid, title, publish in SELECTION:
         slug = block.split("-")[0] + "-" + sid.replace("/", "-").lower()
         target = out / slug
         target.mkdir(parents=True, exist_ok=True)
         variants = []
+        featured = (block, sid) in [("ikea-manualbook", "Bench/applaro"), ("fantastic-breaks-none", "00/00017"), ("assemblybench-manualbook", "1047")]
+        collection = {"ikea-manualbook": "ikea-manual", "fantastic-breaks-none": "fantastic-breaks", "assemblybench-manualbook": "assemblybench"}.get(block) if featured else "assemblyworldbench"
         first_input = None
         for system, label in SYSTEMS.items():
-            if system != "gpt-6-astra" and not publish:
+            if system != "gpt-6-astra" and (featured or (block != "assemblybench-manualbook" and sid != "Chair/falholmen")):
                 continue
-            run = root / "results/assemblyworldbench" / system / block
+            run = root / "results" / collection / system / block
             sample = run / "samples" / sid.replace("/", "--")
             inp = json.loads((sample / "input.json").read_text())
             initial = root / inp["initial_path"]
             assert sha(initial) == inp["sha256"]
             cache_dir = initial.parent / "cache" / initial.name.removesuffix(".episode.zip")
+            if not (cache_dir / "evaluation.json").exists() and block == "fantastic-breaks-none":
+                cache_dir = root / "data/assemblyworldbench/fantastic-breaks-none/fantastic-breaks" / initial.parent.name / "cache" / initial.name.removesuffix(".episode.zip")
             cache = json.loads((cache_dir / "evaluation.json").read_text())
             assert cache["key"]["initial_sha256"] == inp["sha256"]
             assert cache["key"]["identity"]["revision"] == inp["revision"]
@@ -148,7 +157,7 @@ def main():
             if first_input:
                 assert first_input["sha256"] == inp["sha256"], "Comparison requires identical initial archive"
                 assert first_input["manual"] == inp["manual"], "Comparison requires identical references"
-            metrics = next(json.loads(l) for l in (run / "evaluation/metrics.jsonl").read_text().splitlines() if json.loads(l)["sample_id"] == sid)
+            metrics = next(json.loads(l) for l in (run / ("evaluation/chamfer-v2/metrics.jsonl" if featured and block == "fantastic-breaks-none" else "evaluation/metrics.jsonl")).read_text().splitlines() if json.loads(l)["sample_id"] == sid)
             payload = export_run(sample / "final.episode.zip", metrics, cache)
             geometry = bytearray()
             for part in payload["parts"]:
@@ -160,27 +169,27 @@ def main():
                 geometry.extend(indices.tobytes())
             geometry_path = target / f"{system}.bin"
             geometry_path.write_bytes(geometry)
-            payload["geometry"] = dict(url=f"/media/v1/{slug}/{system}.bin", sha256=sha(geometry_path))
+            payload["geometry"] = dict(url=f"/media/v2/{slug}/{system}.bin", sha256=sha(geometry_path))
             run_path = target / f"{system}.json"
             write(run_path, payload)
             audits.append(dict(case=slug, system=system, **payload["validation"]))
-            variants.append(dict(id=system, label=label, url=f"/media/v1/{slug}/{system}.json", sha256=sha(run_path),
-                runId=f"assemblyworldbench/{system}/{block}/{sid}", PA=metrics["PA"], SR=metrics["SR"], SCD=metrics["SCD"],
+            variants.append(dict(id=system, label=label, url=f"/media/v2/{slug}/{system}.json", sha256=sha(run_path),
+                runId=f"{collection}/{system}/{block}/{sid}", PA=metrics["PA"], SR=metrics["SR"], SCD=metrics["SCD"],
                 episodeSHA256=metrics["episode_sha256"], calls=len(payload["calls"])))
             if first_input is None:
                 first_input = inp
                 initial_manifest, initial_files = read_archive(initial)
                 assert initial_files["calls.jsonl"].strip() == b""
                 shutil.copyfile(initial, target / "initial.episode.zip")
-                mode = inp["manual"]["reference_mode"]
-                refs = cache_dir / "reference" / mode
+                mode = inp.get("manual", {}).get("reference_mode", "none" if block.endswith("-none") else "manualbook")
+                refs = sample / inp["manual_directory"].split("/")[-1] if "manual_directory" in inp and mode != "none" else cache_dir / "reference" / mode
                 pages = []
                 if mode != "none":
                     ref = json.loads((refs / "pages.json").read_text())
                     assert ref["revision"] == inp["revision"]
                     for page in ref["pages"]:
                         source = refs / page["file"]
-                        assert sha(source) == page["image_sha256"]
+                        assert sha(source) == page.get("image_sha256", page.get("sha256"))
                         shutil.copyfile(source, target / page["file"])
                         pages.append(page["file"])
                 page_html = ''.join(f'<figure><img src="{p}" alt="Reference page {i+1}" loading="lazy"><figcaption>Page {i+1}</figcaption></figure>' for i,p in enumerate(pages))
@@ -188,9 +197,9 @@ def main():
         dataset, domain, reference = DATASETS[block]
         catalog.append(dict(id=slug, title=title, dataset=dataset, domain=domain, reference=reference, sampleId=sid,
             parts=first_input["parts"], revision=first_input["revision"], source=f'https://huggingface.co/datasets/{cache["key"]["identity"]["dataset"]}',
-            publish=publish, licenseStatus="Non-commercial research; AssemblyBench and Fusion 360 Gallery terms" if publish else "Pending confirmation of public redistribution rights",
-            initial=f"/media/v1/{slug}/initial.episode.zip", initialSHA256=first_input["sha256"],
-            manual=f"/media/v1/{slug}/reference.html", thumbnail=f"/media/v1/{slug}/preview.png", variants=variants))
+            publish=publish, featured=featured, licenseStatus="Non-commercial research; original source terms retained; research display permission confirmed by project owner on 2026-09-29", clearanceEvidence="docs/asset-clearance.md",
+            initial=f"/media/v2/{slug}/initial.episode.zip", initialSHA256=first_input["sha256"],
+            manual=f"/media/v2/{slug}/reference.html", thumbnail=f"/media/v2/{slug}/preview.png", variants=variants))
         print(slug, len(variants), flush=True)
     write(ROOT / "public/catalog.local.json", dict(version=1, cases=catalog))
     write(ROOT / "public/catalog.json", dict(version=1, cases=[c for c in catalog if c["publish"]]))

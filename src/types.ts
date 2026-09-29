@@ -22,6 +22,7 @@ export interface Case {
   revision: string;
   source: string;
   publish: boolean;
+  featured?: boolean;
   licenseStatus: string;
   initial: string;
   initialSHA256: string;
@@ -52,6 +53,10 @@ export interface Run {
     indexCount: number;
   }[];
   states: Record<string, Pose[]>;
+  cameras: Record<
+    string,
+    { position: number[]; target: number[]; up: number[]; fov: number }
+  >;
   calls: Call[];
   groundTruth: Pose[];
   finalState: number;

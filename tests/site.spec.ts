@@ -4,7 +4,7 @@ test("scene playback, part selection, reference and independent agent timelines"
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/");
+  await page.goto("/?case=assemblybench-7355");
   await expect(page.locator("canvas")).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(1);
   await page.getByRole("button", { name: "Next step 1", exact: true }).click();
@@ -38,22 +38,22 @@ test("gallery selection stays in sync with Try and is immediately followed by it
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator(".case-card")).toHaveCount(3);
+  await expect(page.locator(".case-card")).toHaveCount(12);
   await page.locator(".case-card").nth(1).click();
-  await expect(page.locator("#try-case")).toHaveValue("assemblybench-1386");
+  await expect(page.locator("#try-case")).toHaveValue("fantastic-00-00017");
   await expect(page.locator("#gallery-viewer canvas")).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(1);
   expect(
     await page.locator("#gallery").evaluate((el) => el.nextElementSibling?.id),
   ).toBe("try");
   await expect(page.locator(".prompt-panel pre")).toContainText(
-    "assemblybench-1386",
+    "fantastic-00-00017",
   );
   await expect(
     page.getByRole("link", { name: "Open scene ↗", exact: true }),
   ).toHaveAttribute("href", /3DWebAgent\/\?episode=.*initial\.episode\.zip/);
-  await page.locator("#try-case").selectOption("assemblybench-4492");
-  await expect(page.locator(".case-card.active")).toContainText("4492");
+  await page.locator("#try-case").selectOption("assemblybench-1386");
+  await expect(page.locator(".case-card.active")).toContainText("1386");
   await expect(page.locator("#gallery-viewer canvas")).toBeVisible();
   expect(
     await page.evaluate(
@@ -62,8 +62,8 @@ test("gallery selection stays in sync with Try and is immediately followed by it
   ).toBe(true);
 });
 test("deep link, terms and citation remain accessible", async ({ page }) => {
-  await page.goto("/?case=assemblybench-4492");
-  await expect(page.locator("#try-case")).toHaveValue("assemblybench-4492");
+  await page.goto("/?case=assemblybench-1386");
+  await expect(page.locator("#try-case")).toHaveValue("assemblybench-1386");
   await expect(page.locator(".citation pre")).toContainText(
     "@misc{zhang2026assemblyworld",
   );
@@ -110,4 +110,98 @@ test("all local examples load and expose their complete recorded timeline", asyn
       "Initial state",
     );
   }
+});
+
+test("dataset tabs, paper examples, author links and unpublished paper", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".case-card")).toHaveCount(12);
+  await expect(page.locator(".case-card").nth(0)).toContainText("APPLARO");
+  await expect(page.locator(".case-card").nth(1)).toContainText("00/00017");
+  await expect(page.locator(".case-card").nth(2)).toContainText("1047");
+  for (const name of [
+    "PartNet",
+    "IKEA-Manual",
+    "AssemblyBench",
+    "Fantastic Breaks",
+  ]) {
+    await page.getByRole("tab", { name, exact: true }).click();
+    await expect(page.locator(".case-card")).toHaveCount(3);
+    await expect(page.locator(".case-card").first()).toContainText(name);
+  }
+  await expect(page.locator(".authors a")).toHaveCount(8);
+  await expect(page.locator(".affiliations a")).toHaveCount(4);
+  await expect(page.locator(".hero-actions .unavailable")).toContainText(
+    "arXiv forthcoming",
+  );
+  await expect(page.locator('a[href*="paper.pdf"]')).toHaveCount(0);
+  await expect(
+    page.locator('.hero-actions a[href$="AssemblyWorldBench-Results"]'),
+  ).toBeVisible();
+});
+
+test("recorded camera follows the timeline and ignores free-orbit input", async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto("/");
+  const canvas = page.locator("canvas");
+  await expect(canvas).toBeVisible();
+  await page.getByLabel("Show agent camera", { exact: true }).check();
+  await page.getByRole("button", { name: "Next step 1", exact: true }).click();
+  await page.getByLabel("Follow agent camera", { exact: true }).check();
+  await expect(page.locator(".stage-note")).toContainText("RECORDED CAMERA");
+  const slider = page.getByRole("slider", { name: "Trajectory step 1" });
+  await slider.fill("20");
+  await expect(slider).toHaveValue("20");
+  await canvas.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(150);
+  const before = await canvas.evaluate((el: HTMLCanvasElement) =>
+    el.toDataURL(),
+  );
+  await canvas.hover();
+  const bounds = (await canvas.boundingBox())!;
+  await page.mouse.move(bounds.x + 30, bounds.y + 40);
+  await page.mouse.down();
+  await page.mouse.move(bounds.x + 150, bounds.y + 80, { steps: 5 });
+  await page.mouse.up();
+  if (!isMobile) await page.mouse.wheel(0, 5000);
+  await page.waitForTimeout(150);
+  expect(
+    (await canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())) ===
+      before,
+  ).toBe(true);
+  await page.getByRole("button", { name: "↺ Reset view" }).click();
+  await expect(
+    page.getByLabel("Follow agent camera", { exact: true }),
+  ).not.toBeChecked();
+  await expect(slider).toHaveValue("20");
+});
+
+test("free-view zoom reaches finite minimum and maximum distances", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "Mobile WebKit does not implement mouse wheel input");
+  await page.goto("/");
+  const canvas = page.locator("canvas");
+  await expect(canvas).toBeVisible();
+  await canvas.hover();
+  for (const delta of [-100000, 100000]) {
+    await page.mouse.wheel(0, delta);
+    await page.waitForTimeout(350);
+    const bound = await canvas.evaluate((el: HTMLCanvasElement) =>
+      el.toDataURL(),
+    );
+    await page.mouse.wheel(0, delta);
+    await page.waitForTimeout(350);
+    expect(
+      (await canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())) ===
+        bound,
+    ).toBe(true);
+  }
+  await expect(
+    page.getByRole("slider", { name: "Trajectory step 1" }),
+  ).toHaveValue("0");
 });
