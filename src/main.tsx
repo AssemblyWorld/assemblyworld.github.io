@@ -65,9 +65,13 @@ function Copy({
   );
 }
 function trackCopy(event: string, caseId?: string) {
-  const analytics = (window as Window & {
-    umami?: { track: (name: string, data?: Record<string, string>) => unknown };
-  }).umami;
+  const analytics = (
+    window as Window & {
+      umami?: {
+        track: (name: string, data?: Record<string, string>) => unknown;
+      };
+    }
+  ).umami;
   try {
     // Analytics failures must never interrupt clipboard feedback.
     void Promise.resolve(
@@ -485,9 +489,8 @@ function App() {
               <h2>Reasoning becomes action.</h2>
             </div>
             <p>
-              A common observation–action interface
-              <br />
-              connects agent decisions to a 3D environment.
+              A common observation–action interface connects agent decisions to a
+              3D environment.
             </p>
           </div>
           <div className="method-flow">
@@ -499,7 +502,11 @@ function App() {
                 Inspect rendered images, choose viewpoints, and consult the
                 available reference.
               </p>
-              <code>capture_scene</code>
+              <div className="method-tools" aria-label="Observation tools">
+                <code>get_scene</code>
+                <code>move_camera</code>
+                <code>capture_scene</code>
+              </div>
             </article>
             <span className="flow-arrow">→</span>
             <article>
@@ -510,7 +517,11 @@ function App() {
                 Translate and rotate parts or groups with explicit pose-editing
                 tools.
               </p>
-              <code>translate_objects</code>
+              <div className="method-tools" aria-label="Action tools">
+                <code>translate_objects</code>
+                <code>rotate_objects</code>
+                <code>group_objects</code>
+              </div>
             </article>
             <span className="flow-arrow">→</span>
             <article>
@@ -521,9 +532,11 @@ function App() {
                 Inspect the new state, identify remaining errors, and revise the
                 assembly.
               </p>
-              <a href="#gallery" className="inline-link">
-                Explore an assembly ↑
-              </a>
+              <div className="method-tools" aria-label="Refinement tools">
+                <code>capture_scene</code>
+                <code>get_object</code>
+                <code>set_object_pose</code>
+              </div>
             </article>
           </div>
         </section>

@@ -1,5 +1,5 @@
-# Research display permission
+# Asset permissions
 
-On 2026-09-29, the project owner explicitly confirmed in the website implementation conversation that PartNet, IKEA-Manual and Fantastic Breaks have permission for research display. This confirmation covers the requested interactive research gallery and its example geometry and initial scenes. It is the project-provided permission evidence, not an independently reviewed license document.
+The project owner confirmed research-display permission for the curated PartNet, IKEA-Manual and Fantastic Breaks examples on 2026-09-29, including geometry and initial scenes. AssemblyBench examples retain the Fusion 360 Gallery and AssemblyBench notices in `public/licenses/`.
 
-Publish curated examples for non-commercial research only. Retain pinned source revisions, attribution and original terms. This confirmation does not grant general commercial rights or relicense the source datasets. AssemblyBench retains the preserved Fusion 360 Gallery and AssemblyBench notices.
+Original attribution and source terms apply; this website does not relicense the datasets. See [asset terms](../public/asset-terms.html).

@@ -208,7 +208,6 @@ def main():
     write(ROOT / "public/catalog.local.json", dict(version=1, cases=catalog))
     write(ROOT / "public/catalog.json", dict(version=1, cases=[c for c in catalog if c["publish"]]))
     write(ROOT / ".local/export-audit.json", audits)
-    write(ROOT / "scripts/selection.json", [{k:v for k,v in c.items() if k not in ("variants",)} for c in catalog])
 
 
 if __name__ == "__main__":
