@@ -7,12 +7,12 @@ import "./style.css";
 const ENV = "https://assemblyworld.github.io/3DWebAgent/";
 const README =
   "https://github.com/AssemblyWorld/3DWebAgent#connect-through-webmcp";
-const CODE = "https://github.com/AssemblyWorld/3DWebAgent";
+const CODE = "https://github.com/AssemblyWorld/assembly-world-agent";
 const DATA = "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench";
 const RESULTS =
   "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench-Results";
 const authors = [
-  ["Jiahao Zhang", "1,*", "https://davidzhang73.github.io/"],
+  ["Jiahao Zhang", "1,*", "https://academic.davidz.cn/"],
   ["Yeying Fan", "3,*", "https://www.researchgate.net/profile/Yeying-Fan"],
   [
     "Moitreya Chatterjee",
@@ -25,14 +25,13 @@ const authors = [
   ["Anoop Cherian", "2", "https://users.cecs.anu.edu.au/~cherian/"],
   ["Stephen Gould", "1", "https://users.cecs.anu.edu.au/~sgould/"],
 ];
-const bib = `@misc{zhang2026assemblyworld,
+const bib = `@article{zhang2026assemblyworld,
   title = {AssemblyWorld: Rethinking 3D Assembly with General-Purpose Agents},
   author = {Zhang, Jiahao and Fan, Yeying and Chatterjee, Moitreya and
             Lohit, Suhas and Egger, Bernhard and Marks, Tim K. and
             Cherian, Anoop and Gould, Stephen},
   year = {2026},
-  archivePrefix = {arXiv},
-  note = {Preprint; arXiv identifier forthcoming},
+  journal = {arXiv preprint arXiv:YYMM.NNNNN},
   url = {https://assemblyworld.github.io/}
 }`;
 function Copy({
@@ -129,7 +128,7 @@ function App() {
           AssemblyWorld<span className="brand-dot">.</span>
         </a>
         <nav aria-label="Main navigation">
-          <a href="#gallery">Explore</a>
+          <a href="#assembly-viewer">Explore</a>
           <a href="#try">Try it</a>
           <a href="#results">Results</a>
           <a className="nav-code" href={CODE}>
@@ -546,19 +545,6 @@ function App() {
               <p>Open benchmark on Hugging Face.</p>
             </a>
           </div>
-          <p>
-            <a className="inline-link" href={RESULTS}>
-              Recorded results on Hugging Face ↗
-            </a>
-          </p>
-          <p>
-            <a
-              className="inline-link"
-              href="https://huggingface.co/AssemblyWorld"
-            >
-              Browse the source datasets on Hugging Face ↗
-            </a>
-          </p>
           <div className="citation">
             <div>
               <h3>Cite this work</h3>

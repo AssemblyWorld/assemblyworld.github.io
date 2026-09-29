@@ -65,7 +65,7 @@ test("deep link, terms and citation remain accessible", async ({ page }) => {
   await page.goto("/?case=assemblybench-7355");
   await expect(page.locator("#try-case")).toHaveValue("assemblybench-7355");
   await expect(page.locator(".citation pre")).toContainText(
-    "@misc{zhang2026assemblyworld",
+    "@article{zhang2026assemblyworld",
   );
   await page.goto("/asset-terms.html");
   await expect(
@@ -317,9 +317,9 @@ test("camera switches default on and orientation compass selects a free axis vie
   ).toHaveText("Benchmark ↗");
   await expect(
     page.locator(
-      'a[href="https://github.com/AssemblyWorld/assembly-world-agent"]',
+      '.nav-code[href="https://github.com/AssemblyWorld/assembly-world-agent"]',
     ),
-  ).toHaveCount(0);
+  ).toHaveCount(1);
 });
 
 test("concise hero and camera frame follow the active viewport", async ({
@@ -336,7 +336,7 @@ test("concise hero and camera frame follow the active viewport", async ({
   ).toHaveCount(0);
   await expect(page.locator(".gallery-toolbar")).toContainText("12 assemblies");
   await expect(page.locator(".citation pre")).toContainText(
-    "archivePrefix = {arXiv}",
+    "journal = {arXiv preprint arXiv:YYMM.NNNNN}",
   );
   await expect(page.locator(".citation pre")).toContainText(
     "url = {https://assemblyworld.github.io/}",
