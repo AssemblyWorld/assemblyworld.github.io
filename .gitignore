@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.local/
+public/media/
+public/catalog.local.json
+.venv/
+__pycache__/
+test-results/
+playwright-report/

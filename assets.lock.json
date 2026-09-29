@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "url": "https://github.com/AssemblyWorld/assemblyworld.github.io/releases/download/assets-v1/media-v1.tar.gz",
+  "sha256": "fbc8d8a8b63aa5d0663bc300665dc35385a0d905aff44a445b8be1eafd4b5a0a",
+  "bytes": 4857680,
+  "cases": [
+    "assemblybench-7355",
+    "assemblybench-1386",
+    "assemblybench-4492"
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "assemblybench-7355",
+      "title": "Industrial assembly 7355",
+      "dataset": "AssemblyBench",
+      "domain": "Industrial",
+      "reference": "Assembly manual",
+      "sampleId": "7355",
+      "parts": 4,
+      "revision": "266e883e1676af42c44c41484c77b662b987b966",
+      "source": "https://huggingface.co/datasets/AssemblyWorld/assemblybench",
+      "publish": true,
+      "licenseStatus": "Non-commercial research; AssemblyBench and Fusion 360 Gallery terms",
+      "initial": "/media/v1/assemblybench-7355/initial.episode.zip",
+      "initialSHA256": "efb41e5f7af95f60e1831bcbbda06341da439677f65064d4d935ea944d9e902e",
+      "manual": "/media/v1/assemblybench-7355/reference.html",
+      "thumbnail": "/media/v1/assemblybench-7355/preview.png",
+      "variants": [
+        {
+          "id": "gpt-6-astra",
+          "label": "GPT-6 Astra",
+          "url": "/media/v1/assemblybench-7355/gpt-6-astra.json",
+          "sha256": "7adccf06570051fbdbd92d35f54c1be08981dd432929b548840f82aeb361d663",
+          "runId": "assemblyworldbench/gpt-6-astra/assemblybench-manualbook/7355",
+          "PA": 1.0,
+          "SR": 1,
+          "SCD": 0.3069000554173328,
+          "episodeSHA256": "fc1c52642633860854aca276a50c1a19b740f0fe7a26245332199c828acf8df2",
+          "calls": 55
+        },
+        {
+          "id": "claude-fable-5-1",
+          "label": "Claude Fable 5.1",
+          "url": "/media/v1/assemblybench-7355/claude-fable-5-1.json",
+          "sha256": "087a65a66e6cd87c0e320d4d99fa84398a42238cfcfa1bb4e048408850a83ba2",
+          "runId": "assemblyworldbench/claude-fable-5-1/assemblybench-manualbook/7355",
+          "PA": 1.0,
+          "SR": 1,
+          "SCD": 0.42736202888476327,
+          "episodeSHA256": "d0759f8a502784162ad663c937a71e896fb8765d8b4b8af4de54435aac75c800",
+          "calls": 126
+        }
+      ]
+    },
+    {
+      "id": "assemblybench-1386",
+      "title": "Industrial assembly 1386",
+      "dataset": "AssemblyBench",
+      "domain": "Industrial",
+      "reference": "Assembly manual",
+      "sampleId": "1386",
+      "parts": 13,
+      "revision": "266e883e1676af42c44c41484c77b662b987b966",
+      "source": "https://huggingface.co/datasets/AssemblyWorld/assemblybench",
+      "publish": true,
+      "licenseStatus": "Non-commercial research; AssemblyBench and Fusion 360 Gallery terms",
+      "initial": "/media/v1/assemblybench-1386/initial.episode.zip",
+      "initialSHA256": "aad66440ac22ff7eb0dfdfc58f8b1fd04678da701ba61f86f30dd2e180178db6",
+      "manual": "/media/v1/assemblybench-1386/reference.html",
+      "thumbnail": "/media/v1/assemblybench-1386/preview.png",
+      "variants": [
+        {
+          "id": "gpt-6-astra",
+          "label": "GPT-6 Astra",
+          "url": "/media/v1/assemblybench-1386/gpt-6-astra.json",
+          "sha256": "b2747c77d4f2696bd171cf62c77671e7b4e4b138d697c0437082dc875cc0e9c7",
+          "runId": "assemblyworldbench/gpt-6-astra/assemblybench-manualbook/1386",
+          "PA": 0.9230769230769231,
+          "SR": 0,
+          "SCD": 0.9165670158799214,
+          "episodeSHA256": "733cc87f4a7e67dc8fea172577d9f62656b216db0dd46410485e7893892169d0",
+          "calls": 146
+        },
+        {
+          "id": "claude-fable-5-1",
+          "label": "Claude Fable 5.1",
+          "url": "/media/v1/assemblybench-1386/claude-fable-5-1.json",
+          "sha256": "171014c06936aa8193e359d21d8315b6656d848cb9c3e14f41539216b61360e7",
+          "runId": "assemblyworldbench/claude-fable-5-1/assemblybench-manualbook/1386",
+          "PA": 0.38461538461538464,
+          "SR": 0,
+          "SCD": 2.1640581753382397,
+          "episodeSHA256": "35b2a69cc702d910ad4fd5eb4bef1fae19981a1bec938eaf260199ac99078717",
+          "calls": 215
+        }
+      ]
+    },
+    {
+      "id": "assemblybench-4492",
+      "title": "Industrial assembly 4492",
+      "dataset": "AssemblyBench",
+      "domain": "Industrial",
+      "reference": "Assembly manual",
+      "sampleId": "4492",
+      "parts": 7,
+      "revision": "266e883e1676af42c44c41484c77b662b987b966",
+      "source": "https://huggingface.co/datasets/AssemblyWorld/assemblybench",
+      "publish": true,
+      "licenseStatus": "Non-commercial research; AssemblyBench and Fusion 360 Gallery terms",
+      "initial": "/media/v1/assemblybench-4492/initial.episode.zip",
+      "initialSHA256": "5533d98cef42d6ba7e5ec58a1b1b228243489c75f5b099271e576f57544eab19",
+      "manual": "/media/v1/assemblybench-4492/reference.html",
+      "thumbnail": "/media/v1/assemblybench-4492/preview.png",
+      "variants": [
+        {
+          "id": "gpt-6-astra",
+          "label": "GPT-6 Astra",
+          "url": "/media/v1/assemblybench-4492/gpt-6-astra.json",
+          "sha256": "9338ace225fd8a0392c7120c9a9dfe065352ebfd2e943374063891098d465a01",
+          "runId": "assemblyworldbench/gpt-6-astra/assemblybench-manualbook/4492",
+          "PA": 0.42857142857142855,
+          "SR": 0,
+          "SCD": 1.5289373599851444,
+          "episodeSHA256": "08d1b98f10ff97d31ab84bf7ccde90f95148e86b82093b83583b5b6003c422e0",
+          "calls": 57
+        },
+        {
+          "id": "claude-fable-5-1",
+          "label": "Claude Fable 5.1",
+          "url": "/media/v1/assemblybench-4492/claude-fable-5-1.json",
+          "sha256": "7c4ff684669b880916cf6858fc6caea96aa6993123606d3755cb7947f46c4305",
+          "runId": "assemblyworldbench/claude-fable-5-1/assemblybench-manualbook/4492",
+          "PA": 0.8571428571428571,
+          "SR": 0,
+          "SCD": 1.8326913427677922,
+          "episodeSHA256": "b41db9e63f61657fe42373be40598cc7d3c4398c5a72fb8b361f158d8c28c779",
+          "calls": 68
+        }
+      ]
+    }
+  ]
+}
