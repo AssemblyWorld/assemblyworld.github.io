@@ -139,7 +139,7 @@ export default function Viewer({ item }: { item: Case }) {
         )}
         <div className="stage-note">
           {followCamera
-            ? "AGENT CAMERA · TURN OFF FOLLOW TO EXPLORE"
+            ? "AGENT CAMERA · DRAG TO EXPLORE"
             : "DRAG TO ORBIT · SCROLL TO ZOOM · CLICK A PART"}
         </div>
         {compare && (
@@ -225,7 +225,7 @@ export default function Viewer({ item }: { item: Case }) {
             Follow agent camera
           </label>
           <span className="camera-hint">
-            Follow locks the view to the recorded camera.
+            Drag the scene to leave the agent camera.
           </span>
           <label className="part-select">
             Highlight{" "}
@@ -316,7 +316,7 @@ export default function Viewer({ item }: { item: Case }) {
         <p className="viewer-footnote">
           {mode === "overlay" ? "Teal outline: target assembly. " : ""}
           {followCamera
-            ? "Following the agent’s camera. Turn off Follow to explore freely."
+            ? "Following the agent’s camera. Drag to explore freely."
             : ""}
         </p>
       )}

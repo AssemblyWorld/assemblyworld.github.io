@@ -149,20 +149,19 @@ test("dataset tabs, paper examples, author links and unpublished paper", async (
   await expect(page.locator(".case-card")).toHaveCount(12);
   await expect(page.locator(".authors a")).toHaveCount(8);
   await expect(page.locator(".affiliations a")).toHaveCount(4);
-  await expect(page.locator(".hero-actions .unavailable")).toContainText(
-    "Paper",
-  );
-  await expect(page.locator(".hero-actions .unavailable")).toHaveAttribute(
-    "aria-disabled",
-    "true",
-  );
+  await expect(
+    page.locator(".hero-actions .unavailable").first(),
+  ).toContainText("Paper");
+  await expect(
+    page.locator(".hero-actions .unavailable").first(),
+  ).toHaveAttribute("aria-disabled", "true");
   await expect(page.locator('a[href*="paper.pdf"]')).toHaveCount(0);
   await expect(
     page.locator('.hero-actions a[href$="AssemblyWorldBench-Results"]'),
   ).toBeVisible();
 });
 
-test("recorded camera follows the timeline and ignores free-orbit input", async ({
+test("dragging leaves the recorded camera and preserves the timeline", async ({
   page,
   isMobile,
 }) => {
@@ -199,7 +198,10 @@ test("recorded camera follows the timeline and ignores free-orbit input", async 
   expect(
     (await canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())) ===
       before,
-  ).toBe(true);
+  ).toBe(false);
+  await expect(
+    page.getByRole("switch", { name: "Follow agent camera", exact: true }),
+  ).not.toBeChecked();
   await page.getByRole("button", { name: "↺ Reset view" }).click();
   await expect(
     page.getByLabel("Follow agent camera", { exact: true }),
@@ -346,6 +348,65 @@ test("concise hero and camera frame follow the active viewport", async ({
     .getByRole("switch", { name: "Follow agent camera", exact: true })
     .uncheck();
   await expect(page.locator(".camera-frame")).toBeHidden();
-  await page.locator(".paper-pending").focus();
+  await page.locator(".paper-pending").first().focus();
   await expect(page.getByRole("tooltip")).toBeVisible();
+});
+
+test("Code is a pending agent-repository button and a click keeps camera follow", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator("canvas")).toBeVisible();
+  await page.locator("canvas").click({ position: { x: 180, y: 150 } });
+  await expect(
+    page.getByRole("switch", { name: "Follow agent camera", exact: true }),
+  ).toBeChecked();
+  const code = page.getByRole("button", { name: "Code", exact: true });
+  await expect(code).toHaveAttribute("aria-disabled", "true");
+  await expect(code).toHaveAttribute(
+    "data-repository",
+    "https://github.com/AssemblyWorld/assembly-world-agent",
+  );
+  await code.focus();
+  await expect(page.locator("#code-coming")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Environment code ↗", exact: true }),
+  ).toHaveCount(0);
+});
+
+test("touch dragging exits camera follow", async ({
+  page,
+  browserName,
+}, info) => {
+  test.skip(
+    browserName !== "chromium" || info.project.name !== "chrome",
+    "Native touch dispatch uses Chrome CDP",
+  );
+  await page.goto("/");
+  await expect(page.locator("canvas")).toBeVisible();
+  await page.locator("canvas").scrollIntoViewIfNeeded();
+  const box = (await page.locator("canvas").boundingBox())!;
+  const cdp = await page.context().newCDPSession(page);
+  const x = box.x + box.width * 0.45,
+    y = box.y + box.height * 0.45;
+  await cdp.send("Input.dispatchTouchEvent", {
+    type: "touchStart",
+    touchPoints: [{ x, y }],
+  });
+  for (let i = 1; i <= 5; i++)
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: [{ x: x + i * 15, y: y + i * 4 }],
+    });
+  await cdp.send("Input.dispatchTouchEvent", {
+    type: "touchEnd",
+    touchPoints: [],
+  });
+  await expect(
+    page.getByRole("switch", { name: "Follow agent camera", exact: true }),
+  ).not.toBeChecked();
+  await expect(
+    page.getByRole("slider", { name: "Trajectory step 1" }),
+  ).toHaveValue("0");
+  await cdp.detach();
 });

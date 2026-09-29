@@ -235,11 +235,60 @@ export default function Stage(props: Props) {
     const ray = new THREE.Raycaster(),
       pointer = new THREE.Vector2();
     let down = [0, 0];
+    let followPointer: number | null = null;
+    let dragOverride = false;
+    let preserveDragView = false;
     const start = (e: PointerEvent) => {
       down = [e.clientX, e.clientY];
+      if (!latest.current.followCamera || dragOverride) return;
+      followPointer = e.pointerId;
+      const rect = renderer.domElement.getBoundingClientRect();
+      const pane = Math.min(
+        scenes.length - 1,
+        Math.max(
+          0,
+          Math.floor(((e.clientX - rect.left) / rect.width) * scenes.length),
+        ),
+      );
+      const recorded = scenes[pane].recordedCamera;
+      camera.copy(recorded);
+      camera.aspect = el.clientWidth / scenes.length / el.clientHeight;
+      const contentHeight = Math.min(
+        el.clientHeight,
+        ((el.clientWidth / scenes.length) * 3) / 4,
+      );
+      camera.fov = THREE.MathUtils.radToDeg(
+        2 *
+          Math.atan(
+            (Math.tan(THREE.MathUtils.degToRad(recorded.fov / 2)) *
+              el.clientHeight) /
+              contentHeight,
+          ),
+      );
+      camera.updateProjectionMatrix();
+      controls.target.fromArray(recorded.userData.target);
+      const distance = camera.position.distanceTo(controls.target);
+      controls.minDistance = Math.min(controls.minDistance, distance * 0.95);
+      controls.maxDistance = Math.max(controls.maxDistance, distance * 1.05);
+      controls.enabled = true;
+    };
+    const drag = (e: PointerEvent) => {
+      if (
+        !latest.current.followCamera ||
+        followPointer !== e.pointerId ||
+        dragOverride ||
+        Math.hypot(e.clientX - down[0], e.clientY - down[1]) <= 3
+      )
+        return;
+      dragOverride = true;
+      preserveDragView = true;
+      latest.current.onFreeView();
+    };
+    const release = () => {
+      followPointer = null;
     };
     const pick = (e: PointerEvent) => {
-      if (Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+      if (Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 3) return;
       const rect = renderer.domElement.getBoundingClientRect();
       const pane = Math.min(
         scenes.length - 1,
@@ -267,7 +316,11 @@ export default function Stage(props: Props) {
       const hit = ray.intersectObjects(scenes[pane].meshes)[0];
       latest.current.onSelect(hit?.object.userData.id ?? "");
     };
-    renderer.domElement.addEventListener("pointerdown", start);
+    // Capture before OrbitControls so the same drag continues from the recorded view.
+    renderer.domElement.addEventListener("pointerdown", start, true);
+    renderer.domElement.addEventListener("pointermove", drag, true);
+    renderer.domElement.addEventListener("pointerup", release, true);
+    renderer.domElement.addEventListener("pointercancel", release, true);
     renderer.domElement.addEventListener("pointerup", pick);
     let frame = 0,
       lastReset = props.reset,
@@ -278,6 +331,8 @@ export default function Stage(props: Props) {
       height = 0;
     const draw = () => {
       const p = latest.current;
+      if (!p.followCamera) dragOverride = false;
+      const following = p.followCamera && !dragOverride;
       const w = el.clientWidth,
         h = el.clientHeight;
       if (w !== width || h !== height) {
@@ -291,15 +346,16 @@ export default function Stage(props: Props) {
         p.reset !== lastReset ||
         p.mode !== lastMode ||
         p.showCamera !== lastShow ||
-        p.followCamera !== lastFollow
+        following !== lastFollow
       ) {
         lastShow = p.showCamera;
-        lastFollow = p.followCamera;
+        lastFollow = following;
         lastReset = p.reset;
         lastMode = p.mode;
-        home();
+        if (!preserveDragView) home();
+        preserveDragView = false;
       }
-      if (pendingDirection && !p.followCamera) {
+      if (pendingDirection && !following) {
         const distance = camera.position.distanceTo(controls.target);
         camera.position
           .copy(controls.target)
@@ -313,8 +369,8 @@ export default function Stage(props: Props) {
         controls.update();
         pendingDirection = null;
       }
-      controls.enabled = !p.followCamera;
-      if (controls.enabled) controls.update();
+      controls.enabled = !following || followPointer !== null;
+      if (!following) controls.update();
       renderer.setScissorTest(true);
       scenes.forEach(({ scene, meshes, ghosts, recordedCamera, helper }, i) => {
         const run = p.runs[i],
@@ -326,12 +382,13 @@ export default function Stage(props: Props) {
               ? String(run.finalState)
               : String(call?.state_index ?? 0);
         const recorded = run.cameras[state];
+        recordedCamera.userData.target = recorded.target;
         recordedCamera.position.fromArray(recorded.position);
         recordedCamera.up.fromArray(recorded.up);
         recordedCamera.lookAt(new THREE.Vector3().fromArray(recorded.target));
         recordedCamera.fov = recorded.fov;
         recordedCamera.near = 0.01;
-        recordedCamera.far = p.followCamera
+        recordedCamera.far = following
           ? 1000
           : Math.max(
               0.1,
@@ -342,8 +399,8 @@ export default function Stage(props: Props) {
         recordedCamera.updateProjectionMatrix();
         recordedCamera.updateMatrixWorld();
         helper.update();
-        helper.visible = p.showCamera && !p.followCamera;
-        compasses[i].update(p.followCamera ? recordedCamera : camera);
+        helper.visible = p.showCamera && !following;
+        compasses[i].update(following ? recordedCamera : camera);
         const poses = p.mode === "truth" ? run.groundTruth : run.states[state];
         meshes.forEach((m, j) => {
           apply(m, poses[j]);
@@ -361,8 +418,8 @@ export default function Stage(props: Props) {
         renderer.setViewport(x, 0, pw, h);
         renderer.setScissor(x, 0, pw, h);
         renderer.clear();
-        cameraFrames[i].hidden = !p.followCamera;
-        if (p.followCamera) {
+        cameraFrames[i].hidden = !following;
+        if (following) {
           const vh = Math.min(h, (pw * 3) / 4),
             vw = (vh * 4) / 3;
           Object.assign(cameraFrames[i].style, {

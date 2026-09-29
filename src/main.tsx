@@ -232,9 +232,18 @@ function App() {
                   </span>
                 </button>
               )}
-              <a className="button" href={CODE}>
-                Environment code ↗
-              </a>
+              <button
+                className="button unavailable paper-pending code-pending"
+                aria-label="Code"
+                aria-disabled="true"
+                aria-describedby="code-coming"
+                data-repository="https://github.com/AssemblyWorld/assembly-world-agent"
+              >
+                Code
+                <span className="paper-tooltip" id="code-coming" role="tooltip">
+                  Coming soon
+                </span>
+              </button>
               <a className="button" href={DATA}>
                 Benchmark ↗
               </a>
