@@ -179,9 +179,16 @@ test("recorded camera follows the timeline and ignores free-orbit input", async 
   );
   await canvas.hover();
   const bounds = (await canvas.boundingBox())!;
-  await page.mouse.move(bounds.x + 30, bounds.y + 40);
+  await page.mouse.move(
+    bounds.x + bounds.width * 0.4,
+    bounds.y + bounds.height * 0.4,
+  );
   await page.mouse.down();
-  await page.mouse.move(bounds.x + 150, bounds.y + 80, { steps: 5 });
+  await page.mouse.move(
+    bounds.x + bounds.width * 0.6,
+    bounds.y + bounds.height * 0.5,
+    { steps: 5 },
+  );
   await page.mouse.up();
   if (!isMobile) await page.mouse.wheel(0, 5000);
   await page.waitForTimeout(150);
@@ -204,6 +211,9 @@ test("free-view zoom reaches finite minimum and maximum distances", async ({
   await page.goto("/");
   const canvas = page.locator("canvas");
   await expect(canvas).toBeVisible();
+  await page
+    .getByRole("switch", { name: "Follow agent camera", exact: true })
+    .uncheck();
   await canvas.hover();
   for (const delta of [-100000, 100000]) {
     await page.mouse.wheel(0, delta);
@@ -273,4 +283,35 @@ test("single top viewer, successful horizontal selector and five dataset result 
     await expect(page.locator("#paper-table")).toContainText(String(value));
   }
   await expect(page.locator("canvas")).toHaveCount(1);
+});
+
+test("camera switches default on and orientation compass selects a free axis view", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator("canvas")).toBeVisible();
+  await expect(
+    page.getByRole("switch", { name: "Show agent camera", exact: true }),
+  ).toBeChecked();
+  await expect(
+    page.getByRole("switch", { name: "Follow agent camera", exact: true }),
+  ).toBeChecked();
+  await expect(page.locator(".axis-legend")).toHaveCount(0);
+  const z = page.getByRole("button", { name: "View from +Z", exact: true });
+  await z.click();
+  await expect(
+    page.getByRole("switch", { name: "Follow agent camera", exact: true }),
+  ).not.toBeChecked();
+  await expect(
+    page.getByRole("slider", { name: "Trajectory step 1" }),
+  ).toHaveValue("0");
+  await expect(page.locator("canvas")).toHaveCount(1);
+  await expect(
+    page.locator('.hero-actions a[href$="AssemblyWorldBench"]'),
+  ).toHaveText("Benchmark ↗");
+  await expect(
+    page.locator(
+      'a[href="https://github.com/AssemblyWorld/assembly-world-agent"]',
+    ),
+  ).toHaveCount(0);
 });

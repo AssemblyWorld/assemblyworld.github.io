@@ -13,6 +13,12 @@ await fs.mkdir("public/previews", { recursive: true });
 for (const c of catalog.cases.filter((c) => c.variants[0].SR === 1)) {
   await page.goto(`http://127.0.0.1:4173/?case=${c.id}`);
   await page.locator("canvas").waitFor({ timeout: 90000 });
+  await page
+    .getByRole("switch", { name: "Follow agent camera", exact: true })
+    .uncheck();
+  await page
+    .getByRole("switch", { name: "Show agent camera", exact: true })
+    .uncheck();
   await page.waitForTimeout(1200);
   await page.locator("canvas").screenshot({ path: `public${c.thumbnail}` });
   console.log("preview", c.id);

@@ -7,7 +7,7 @@ import "./style.css";
 const ENV = "https://assemblyworld.github.io/3DWebAgent/";
 const README =
   "https://github.com/AssemblyWorld/3DWebAgent#connect-through-webmcp";
-const CODE = "https://github.com/AssemblyWorld/assembly-world-agent";
+const CODE = "https://github.com/AssemblyWorld/3DWebAgent";
 const DATA = "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench";
 const RESULTS =
   "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench-Results";
@@ -224,10 +224,10 @@ function App() {
                 </span>
               )}
               <a className="button" href={CODE}>
-                Code ↗
+                Environment code ↗
               </a>
               <a className="button" href={DATA}>
-                Benchmark · coming soon ↗
+                Benchmark ↗
               </a>
               <a className="button" href={RESULTS}>
                 Results ↗
@@ -551,15 +551,15 @@ function App() {
               <h3>3D environment ↗</h3>
               <p>Browser-based interaction and the episode format.</p>
             </a>
-            <a href={CODE}>
+            <div className="resource-pending">
               <span>02</span>
-              <h3>Agent & evaluation ↗</h3>
-              <p>Task preparation, reproducible runs, and geometric scoring.</p>
-            </a>
+              <h3>Agent & evaluation</h3>
+              <p>Code release coming soon.</p>
+            </div>
             <a href={DATA}>
               <span>03</span>
               <h3>Benchmark & data ↗</h3>
-              <p>Hugging Face benchmark · coming soon.</p>
+              <p>Open benchmark on Hugging Face.</p>
             </a>
           </div>
           <p>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { mountCompass } from "./OrientationCompass";
 import type { Run, Pose, ViewMode } from "./types";
 const COLORS = [
   "#de784e",
@@ -22,6 +23,7 @@ type Props = {
   followCamera: boolean;
   onSelect: (id: string) => void;
   fallback: string;
+  onFreeView: () => void;
 };
 export default function Stage(props: Props) {
   const host = useRef<HTMLDivElement>(null),
@@ -117,22 +119,17 @@ export default function Stage(props: Props) {
         worldBounds.getSize(new THREE.Vector3()).length(),
         0.1,
       );
-      const grid = new THREE.GridHelper(extent * 2.5, 20, 0xa9b3c4, 0xdce1e8);
+      const grid = new THREE.GridHelper(extent * 12, 96, 0xa9b3c4, 0xdce1e8);
       grid.rotation.x = Math.PI / 2;
       grid.position.z = worldBounds.min.z - extent * 0.005;
       const gridCenter = worldBounds.getCenter(new THREE.Vector3());
       grid.position.x = gridCenter.x;
       grid.position.y = gridCenter.y;
-      const axes = new THREE.AxesHelper(extent * 0.5);
-      scene.add(grid, axes);
-      geometries.push(grid.geometry, axes.geometry);
-      for (const helper of [grid, axes]) {
-        materials.push(
-          ...(Array.isArray(helper.material)
-            ? helper.material
-            : [helper.material]),
-        );
-      }
+      scene.add(grid);
+      geometries.push(grid.geometry);
+      materials.push(
+        ...(Array.isArray(grid.material) ? grid.material : [grid.material]),
+      );
       const recordedCamera = new THREE.PerspectiveCamera(38, 4 / 3, 0.01, 1);
       const helper = new THREE.CameraHelper(recordedCamera);
       helper.setColors(
@@ -219,6 +216,15 @@ export default function Stage(props: Props) {
       controls.update();
     };
     home();
+    let pendingDirection: THREE.Vector3 | null = null;
+    const compasses = scenes.map((_, i) => {
+      const compass = mountCompass(el, (direction) => {
+        pendingDirection = direction;
+        latest.current.onFreeView();
+      });
+      compass.root.style.left = `calc(${(i * 100) / scenes.length}% + 10px)`;
+      return compass;
+    });
     const ray = new THREE.Raycaster(),
       pointer = new THREE.Vector2();
     let down = [0, 0];
@@ -286,6 +292,20 @@ export default function Stage(props: Props) {
         lastMode = p.mode;
         home();
       }
+      if (pendingDirection && !p.followCamera) {
+        const distance = camera.position.distanceTo(controls.target);
+        camera.position
+          .copy(controls.target)
+          .addScaledVector(pendingDirection, distance);
+        camera.up.set(
+          0,
+          Math.abs(pendingDirection.z) > 0.9 ? 1 : 0,
+          Math.abs(pendingDirection.z) > 0.9 ? 0 : 1,
+        );
+        camera.lookAt(controls.target);
+        controls.update();
+        pendingDirection = null;
+      }
       controls.enabled = !p.followCamera;
       if (controls.enabled) controls.update();
       renderer.setScissorTest(true);
@@ -316,6 +336,7 @@ export default function Stage(props: Props) {
         recordedCamera.updateMatrixWorld();
         helper.update();
         helper.visible = p.showCamera && !p.followCamera;
+        compasses[i].update(p.followCamera ? recordedCamera : camera);
         const poses = p.mode === "truth" ? run.groundTruth : run.states[state];
         meshes.forEach((m, j) => {
           apply(m, poses[j]);
@@ -347,6 +368,7 @@ export default function Stage(props: Props) {
     return () => {
       cancelAnimationFrame(frame);
       controls.dispose();
+      compasses.forEach((compass) => compass.dispose());
       scenes.forEach(({ helper }) => helper.dispose());
       geometries.forEach((g) => g.dispose());
       materials.forEach((m) => m.dispose());

@@ -11,8 +11,8 @@ export default function Viewer({ item }: { item: Case }) {
     [mode, setMode] = useState<ViewMode>("final"),
     [selected, setSelected] = useState(""),
     [reset, setReset] = useState(0),
-    [showCamera, setShowCamera] = useState(false),
-    [followCamera, setFollowCamera] = useState(false);
+    [showCamera, setShowCamera] = useState(true),
+    [followCamera, setFollowCamera] = useState(true);
   const variants = useMemo(
     () => item.variants.slice(0, compare ? 2 : 1),
     [item, compare],
@@ -119,6 +119,7 @@ export default function Viewer({ item }: { item: Case }) {
             fallback={<div className="load-state">Preparing 3D view…</div>}
           >
             <Stage
+              onFreeView={() => setFollowCamera(false)}
               showCamera={showCamera}
               followCamera={followCamera}
               runs={runs}
@@ -141,14 +142,6 @@ export default function Viewer({ item }: { item: Case }) {
             ? "AGENT CAMERA · TURN OFF FOLLOW TO EXPLORE"
             : "DRAG TO ORBIT · SCROLL TO ZOOM · CLICK A PART"}
         </div>
-        <div
-          className="axis-legend"
-          aria-label="World axes: X red, Y green, Z blue"
-        >
-          <span>X</span>
-          <span>Y</span>
-          <span>Z ↑</span>
-        </div>
         {compare && (
           <div className="pane-labels">
             {variants.map((v) => (
@@ -158,71 +151,98 @@ export default function Viewer({ item }: { item: Case }) {
         )}
       </div>
       <div className="view-controls">
-        <div className="segmented" aria-label="Display mode">
-          {(
-            ["initial", "trajectory", "final", "truth", "overlay"] as ViewMode[]
-          ).map((v) => (
-            <button
-              key={v}
-              aria-pressed={mode === v}
-              onClick={() => {
-                setMode(v);
-                setPlaying([false, false]);
-              }}
-            >
-              {
-                {
-                  initial: "Initial",
-                  trajectory: "Trajectory",
-                  final: "Agent result",
-                  truth: "Ground truth",
-                  overlay: "Overlay",
-                }[v]
-              }
-            </button>
+        <div className="scene-modes" aria-label="Display mode">
+          {[
+            {
+              label: "Explore",
+              modes: ["initial", "trajectory", "final"] as ViewMode[],
+            },
+            { label: "Reference", modes: ["truth", "overlay"] as ViewMode[] },
+          ].map((group) => (
+            <div className="mode-group" key={group.label}>
+              <span className="control-label">{group.label}</span>
+              <div className="mode-options">
+                {group.modes.map((v) => {
+                  const [label, description, icon] = {
+                    initial: ["Initial", "Starting layout", "◌"],
+                    trajectory: ["Trajectory", "Step by step", "▷"],
+                    final: ["Agent result", "Final assembly", "◆"],
+                    truth: ["Ground truth", "Target assembly", "◎"],
+                    overlay: ["Overlay", "Result + target", "▱"],
+                  }[v];
+                  return (
+                    <button
+                      key={v}
+                      aria-label={label}
+                      aria-pressed={mode === v}
+                      onClick={() => {
+                        setMode(v);
+                        setPlaying([false, false]);
+                      }}
+                    >
+                      <span className="mode-icon" aria-hidden="true">
+                        {icon}
+                      </span>
+                      <span>
+                        <strong>{label}</strong>
+                        <small>{description}</small>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           ))}
         </div>
-        {item.variants.length > 1 && (
-          <label className="compare-toggle">
+        <div className="camera-controls">
+          {item.variants.length > 1 && (
+            <label className="switch-control">
+              <input
+                type="checkbox"
+                role="switch"
+                checked={compare}
+                onChange={(e) => setCompare(e.target.checked)}
+              />{" "}
+              Compare agents
+            </label>
+          )}
+          <label className="switch-control">
             <input
               type="checkbox"
-              checked={compare}
-              onChange={(e) => setCompare(e.target.checked)}
+              role="switch"
+              checked={showCamera}
+              onChange={(e) => setShowCamera(e.target.checked)}
             />{" "}
-            Compare agents
+            Show agent camera
           </label>
-        )}
-        <label className="compare-toggle">
-          <input
-            type="checkbox"
-            checked={showCamera}
-            onChange={(e) => setShowCamera(e.target.checked)}
-          />{" "}
-          Show agent camera
-        </label>
-        <label className="compare-toggle">
-          <input
-            type="checkbox"
-            checked={followCamera}
-            onChange={(e) => setFollowCamera(e.target.checked)}
-          />{" "}
-          Follow agent camera
-        </label>
-        <label className="part-select">
-          Highlight{" "}
-          <select
-            aria-label="Highlight part"
-            value={selected}
-            onChange={(e) => setSelected(e.target.value)}
-          >
-            <option value="">All parts</option>
-            {runs[0]?.parts.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </label>
+          <label className="switch-control">
+            <input
+              type="checkbox"
+              role="switch"
+              checked={followCamera}
+              onChange={(e) => setFollowCamera(e.target.checked)}
+            />{" "}
+            Follow agent camera
+          </label>
+          <span className="camera-hint">
+            Follow locks the view to the recorded camera.
+          </span>
+          <label className="part-select">
+            Highlight{" "}
+            <select
+              aria-label="Highlight part"
+              value={selected}
+              onChange={(e) => setSelected(e.target.value)}
+            >
+              <option value="">All parts</option>
+              {runs[0]?.parts.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
       <div className={"tracks " + (compare ? "two" : "")}>
         {runs.map((run, i) => {
