@@ -31,6 +31,8 @@ const bib = `@misc{zhang2026assemblyworld,
             Lohit, Suhas and Egger, Bernhard and Marks, Tim K. and
             Cherian, Anoop and Gould, Stephen},
   year = {2026},
+  archivePrefix = {arXiv},
+  note = {Preprint; arXiv identifier forthcoming},
   url = {https://assemblyworld.github.io/}
 }`;
 function Copy({
@@ -144,11 +146,7 @@ function App() {
               <h1>
                 Assembly<span>World</span>
               </h1>
-              <h2>
-                Rethinking 3D Assembly
-                <br />
-                with General-Purpose Agents
-              </h2>
+              <h2>Rethinking 3D Assembly with General-Purpose Agents</h2>
             </div>
             <div className="hero-abstract">
               <p>
@@ -216,12 +214,23 @@ function App() {
             <div className="hero-actions">
               {paper ? (
                 <a className="button dark" href={paper}>
-                  Read the paper ↗
+                  Paper
                 </a>
               ) : (
-                <span className="button unavailable">
-                  Paper · arXiv forthcoming
-                </span>
+                <button
+                  className="button unavailable paper-pending"
+                  aria-disabled="true"
+                  aria-describedby="paper-coming"
+                >
+                  Paper
+                  <span
+                    className="paper-tooltip"
+                    id="paper-coming"
+                    role="tooltip"
+                  >
+                    Coming soon
+                  </span>
+                </button>
               )}
               <a className="button" href={CODE}>
                 Environment code ↗
@@ -231,9 +240,6 @@ function App() {
               </a>
               <a className="button" href={RESULTS}>
                 Results ↗
-              </a>
-              <a className="button accent" href="#gallery">
-                Explore in 3D ↓
               </a>
             </div>
           </div>
@@ -319,7 +325,7 @@ function App() {
                 cases.filter((c) => filter === "All" || c.dataset === filter)
                   .length
               }{" "}
-              successful assemblies
+              assemblies
             </span>
           </div>
           <div
@@ -443,37 +449,6 @@ function App() {
               )}
             </div>
           </div>
-        </section>
-        <section
-          className="contributions section"
-          aria-label="Research contributions"
-        >
-          <article>
-            <span className="number">01 / ENVIRONMENT</span>
-            <h3>See. Move. Inspect.</h3>
-            <p>
-              Agents reason from rendered views and manipulate supplied rigid
-              parts through a common tool interface. No direct access to mesh
-              vertices or faces.
-            </p>
-          </article>
-          <article>
-            <span className="number">02 / BENCHMARK</span>
-            <h3>One world. Many assemblies.</h3>
-            <p>
-              100 tasks across 80 objects from four data sources, spanning
-              furniture, industrial assemblies, and fracture reconstruction.
-            </p>
-          </article>
-          <article>
-            <span className="number">03 / EVALUATION</span>
-            <h3>Measure the geometry.</h3>
-            <p>
-              Eight agent systems, without assembly-specific fine-tuning. We
-              evaluate the resulting geometry, not the agent’s claim of
-              completion.
-            </p>
-          </article>
         </section>
         <section className="section method" id="method">
           <div className="section-heading">

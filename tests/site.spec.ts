@@ -150,7 +150,11 @@ test("dataset tabs, paper examples, author links and unpublished paper", async (
   await expect(page.locator(".authors a")).toHaveCount(8);
   await expect(page.locator(".affiliations a")).toHaveCount(4);
   await expect(page.locator(".hero-actions .unavailable")).toContainText(
-    "arXiv forthcoming",
+    "Paper",
+  );
+  await expect(page.locator(".hero-actions .unavailable")).toHaveAttribute(
+    "aria-disabled",
+    "true",
   );
   await expect(page.locator('a[href*="paper.pdf"]')).toHaveCount(0);
   await expect(
@@ -314,4 +318,34 @@ test("camera switches default on and orientation compass selects a free axis vie
       'a[href="https://github.com/AssemblyWorld/assembly-world-agent"]',
     ),
   ).toHaveCount(0);
+});
+
+test("concise hero and camera frame follow the active viewport", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.locator(".hero h2 br")).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Explore in 3D ↓", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("region", { name: "Research contributions" }),
+  ).toHaveCount(0);
+  await expect(page.locator(".gallery-toolbar")).toContainText("12 assemblies");
+  await expect(page.locator(".citation pre")).toContainText(
+    "archivePrefix = {arXiv}",
+  );
+  await expect(page.locator(".citation pre")).toContainText(
+    "url = {https://assemblyworld.github.io/}",
+  );
+  await expect(page.locator(".camera-frame")).toBeVisible();
+  const frame = (await page.locator(".camera-frame").boundingBox())!;
+  expect(frame.width / frame.height).toBeCloseTo(4 / 3, 2);
+  await page
+    .getByRole("switch", { name: "Follow agent camera", exact: true })
+    .uncheck();
+  await expect(page.locator(".camera-frame")).toBeHidden();
+  await page.locator(".paper-pending").focus();
+  await expect(page.getByRole("tooltip")).toBeVisible();
 });

@@ -2094,3 +2094,52 @@ h3 {
     transform-origin: top left;
   }
 }
+/* Let the heading and abstract wrap only when the viewport requires it. */
+.hero-masthead {
+  max-width: 1200px;
+}
+.hero h2 {
+  font-size: clamp(25px, 3vw, 39px);
+}
+.hero-abstract {
+  max-width: 1120px;
+}
+.paper-pending {
+  position: relative;
+}
+.hero-actions .paper-pending {
+  background: #f2f2f2;
+  color: #929292;
+  cursor: default;
+}
+.paper-tooltip {
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 11px;
+  border-radius: 7px;
+  background: #333;
+  color: white;
+  white-space: nowrap;
+  font-size: 11px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.paper-pending:hover .paper-tooltip,
+.paper-pending:focus .paper-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+.camera-frame {
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid #45454b;
+  z-index: 2;
+}
+@media (max-width: 760px) {
+  .hero h2 {
+    font-size: 27px;
+  }
+}

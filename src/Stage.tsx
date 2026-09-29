@@ -225,6 +225,13 @@ export default function Stage(props: Props) {
       compass.root.style.left = `calc(${(i * 100) / scenes.length}% + 10px)`;
       return compass;
     });
+    const cameraFrames = scenes.map(() => {
+      const frame = document.createElement("div");
+      frame.className = "camera-frame";
+      frame.setAttribute("aria-hidden", "true");
+      el.append(frame);
+      return frame;
+    });
     const ray = new THREE.Raycaster(),
       pointer = new THREE.Vector2();
     let down = [0, 0];
@@ -354,9 +361,16 @@ export default function Stage(props: Props) {
         renderer.setViewport(x, 0, pw, h);
         renderer.setScissor(x, 0, pw, h);
         renderer.clear();
+        cameraFrames[i].hidden = !p.followCamera;
         if (p.followCamera) {
           const vh = Math.min(h, (pw * 3) / 4),
             vw = (vh * 4) / 3;
+          Object.assign(cameraFrames[i].style, {
+            left: `${x + (pw - vw) / 2}px`,
+            top: `${(h - vh) / 2}px`,
+            width: `${vw}px`,
+            height: `${vh}px`,
+          });
           renderer.setViewport(x + (pw - vw) / 2, (h - vh) / 2, vw, vh);
           renderer.setScissor(x + (pw - vw) / 2, (h - vh) / 2, vw, vh);
           renderer.render(scene, recordedCamera);
@@ -369,6 +383,7 @@ export default function Stage(props: Props) {
       cancelAnimationFrame(frame);
       controls.dispose();
       compasses.forEach((compass) => compass.dispose());
+      cameraFrames.forEach((frame) => frame.remove());
       scenes.forEach(({ helper }) => helper.dispose());
       geometries.forEach((g) => g.dispose());
       materials.forEach((m) => m.dispose());
