@@ -320,6 +320,33 @@ function App() {
                   role="tab"
                   aria-selected={filter === f}
                   aria-controls="dataset-examples"
+                  tabIndex={filter === f ? 0 : -1}
+                  onKeyDown={(event) => {
+                    if (
+                      !["ArrowLeft", "ArrowRight", "Home", "End"].includes(
+                        event.key,
+                      )
+                    )
+                      return;
+                    event.preventDefault();
+                    const tabs = Array.from(
+                      event.currentTarget.parentElement!.querySelectorAll<HTMLButtonElement>(
+                        '[role="tab"]',
+                      ),
+                    );
+                    const index = tabs.indexOf(event.currentTarget);
+                    const next =
+                      event.key === "Home"
+                        ? 0
+                        : event.key === "End"
+                          ? tabs.length - 1
+                          : (index +
+                              (event.key === "ArrowRight" ? 1 : -1) +
+                              tabs.length) %
+                            tabs.length;
+                    tabs[next].focus();
+                    tabs[next].click();
+                  }}
                   onClick={() => setFilter(f)}
                 >
                   {f}

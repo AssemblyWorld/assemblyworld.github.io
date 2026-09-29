@@ -319,7 +319,7 @@ nav a:hover {
   border-radius: 30px;
   padding: 8px 17px;
 }
-.filters button[aria-pressed="true"] {
+.filters button[aria-selected="true"] {
   background: var(--ink);
   color: white;
   border-color: var(--ink);
@@ -1023,6 +1023,12 @@ footer > a:not(.brand) {
   background: white;
   padding: 10px;
 }
+.skip:not(:focus) {
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 .skip:focus {
   top: 10px;
 }
@@ -1480,10 +1486,6 @@ footer > a:not(.brand) {
 .authors a:hover,
 .affiliations a:hover {
   color: var(--sage, #536b4e);
-}
-.segmented button[aria-selected="true"] {
-  background: #243530;
-  color: white;
 }
 .view-controls {
   flex-wrap: wrap;

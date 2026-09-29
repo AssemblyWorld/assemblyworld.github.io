@@ -130,6 +130,11 @@ test("dataset tabs, paper examples, author links and unpublished paper", async (
     await expect(page.locator(".case-card")).toHaveCount(3);
     await expect(page.locator(".case-card").first()).toContainText(name);
   }
+  await page.getByRole("tab", { name: "PartNet", exact: true }).press("Home");
+  await expect(
+    page.getByRole("tab", { name: "All", exact: true }),
+  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator(".case-card")).toHaveCount(12);
   await expect(page.locator(".authors a")).toHaveCount(8);
   await expect(page.locator(".affiliations a")).toHaveCount(4);
   await expect(page.locator(".hero-actions .unavailable")).toContainText(
