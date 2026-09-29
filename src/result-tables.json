@@ -441,7 +441,8 @@
       [
         {
           "text": "DGL (NeurIPS'20)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2006.07793"
         },
         {
           "text": "\u2014",
@@ -487,7 +488,8 @@
       [
         {
           "text": "RGL (WACV'22)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2107.12859"
         },
         {
           "text": "Sequence",
@@ -533,7 +535,8 @@
       [
         {
           "text": "IET (RA-L'22)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2207.01779"
         },
         {
           "text": "\u2014",
@@ -579,7 +582,8 @@
       [
         {
           "text": "Score-PA (BMVC'23)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2309.04220"
         },
         {
           "text": "\u2014",
@@ -625,7 +629,8 @@
       [
         {
           "text": "CCS (AAAI'24)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2312.12340"
         },
         {
           "text": "\u2014",
@@ -671,7 +676,8 @@
       [
         {
           "text": "3DHPA (CVPR'24)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2402.17464"
         },
         {
           "text": "\u2014",
@@ -717,7 +723,8 @@
       [
         {
           "text": "Joint-PA (CVPR'24)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2303.06163"
         },
         {
           "text": "Joint",
@@ -763,7 +770,8 @@
       [
         {
           "text": "SPAFormer (3DV'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2403.05874"
         },
         {
           "text": "Sequence",
@@ -809,7 +817,8 @@
       [
         {
           "text": "CFPA (NeurIPS'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://proceedings.neurips.cc/paper_files/paper/2025/file/fa5b423e24b442180bcd4e13ae75a27f-Paper-Conference.pdf"
         },
         {
           "text": "\u2014",
@@ -855,7 +864,8 @@
       [
         {
           "text": "Assembler (SA'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2506.17074"
         },
         {
           "text": "\u2014",
@@ -947,7 +957,8 @@
       [
         {
           "text": "Image-PA (ECCV'20)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2003.09754"
         },
         {
           "text": "Image",
@@ -993,7 +1004,8 @@
       [
         {
           "text": "Manual-PA (ICCV'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2411.18011"
         },
         {
           "text": "Image",
@@ -1039,7 +1051,8 @@
       [
         {
           "text": "Imagine (AAAI'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://ojs.aaai.org/index.php/AAAI/article/download/32850/35005"
         },
         {
           "text": "Image",
@@ -1085,7 +1098,8 @@
       [
         {
           "text": "Assembler (SA'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2506.17074"
         },
         {
           "text": "Image",
@@ -1194,7 +1208,8 @@
       [
         {
           "text": "3DHPA (CVPR'24)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2402.17464"
         },
         {
           "text": "36.1",
@@ -1228,7 +1243,8 @@
       [
         {
           "text": "Image-PA (ECCV'20)\u2020",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2003.09754"
         },
         {
           "text": "16.0",
@@ -1262,7 +1278,8 @@
       [
         {
           "text": "Manual-PA (ICCV'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2411.18011"
         },
         {
           "text": "8.1",
@@ -1296,7 +1313,8 @@
       [
         {
           "text": "TwoByTwo (CVPR'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2504.06961"
         },
         {
           "text": "\u2014",
@@ -1330,7 +1348,8 @@
       [
         {
           "text": "AssemLM (arXiv'26)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2604.08983"
         },
         {
           "text": "\u2014",
@@ -1406,7 +1425,8 @@
       [
         {
           "text": "Manual-PA (ICCV'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2411.18011"
         },
         {
           "text": "280",
@@ -1428,7 +1448,8 @@
       [
         {
           "text": "AssemblyDyno (CVPR'26)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2605.12845"
         },
         {
           "text": "280",
@@ -1480,7 +1501,8 @@
       [
         {
           "text": "Jigsaw (NeurIPS'23)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2305.17975"
         },
         {
           "text": "26.30\u00b0",
@@ -1502,7 +1524,8 @@
       [
         {
           "text": "PF++ (ICLR'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2406.00259"
         },
         {
           "text": "20.68\u00b0",
@@ -1524,7 +1547,8 @@
       [
         {
           "text": "GARF (ICCV'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2504.05400"
         },
         {
           "text": "10.62\u00b0",
@@ -1546,7 +1570,8 @@
       [
         {
           "text": "RPF (NeurIPS'25)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2506.05282"
         },
         {
           "text": "6.32\u00b0",
@@ -1568,7 +1593,8 @@
       [
         {
           "text": "TORA-CKA (ECCV'26)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2604.04050"
         },
         {
           "text": "3.03\u00b0",
@@ -1590,7 +1616,8 @@
       [
         {
           "text": "SARe-Gen (arXiv'26)",
-          "bold": false
+          "bold": false,
+          "paperUrl": "https://arxiv.org/pdf/2603.21611"
         },
         {
           "text": "7.78\u00b0",

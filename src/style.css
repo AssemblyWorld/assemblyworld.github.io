@@ -1870,3 +1870,14 @@ h3 {
     font-size: 27px;
   }
 }
+
+.method-paper {
+  text-decoration: underline;
+  text-decoration-color: #bbb6c5;
+  text-underline-offset: 3px;
+}
+.method-paper:hover,
+.method-paper:focus-visible {
+  color: var(--blue);
+  text-decoration-color: currentColor;
+}

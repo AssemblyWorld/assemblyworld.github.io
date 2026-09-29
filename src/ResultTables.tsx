@@ -75,7 +75,19 @@ export default function ResultTables() {
                   {row.map((cell, j) =>
                     j === 0 ? (
                       <th key={j} scope="row">
-                        {cell.text}
+                        {cell.paperUrl ? (
+                          <a
+                            className="method-paper"
+                            href={cell.paperUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Open paper PDF in a new tab"
+                          >
+                            {cell.text}
+                          </a>
+                        ) : (
+                          cell.text
+                        )}
                       </th>
                     ) : (
                       <td key={j}>
