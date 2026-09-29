@@ -37,9 +37,13 @@ const bib = `@article{zhang2026assemblyworld,
 function Copy({
   text,
   label = "Copy prompt",
+  event,
+  caseId,
 }: {
   text: string;
   label?: string;
+  event: "copy-agent-prompt" | "copy-citation";
+  caseId?: string;
 }) {
   const [state, setState] = useState("");
   useEffect(() => setState(""), [text]);
@@ -50,6 +54,7 @@ function Copy({
         try {
           await navigator.clipboard.writeText(text);
           setState("Copied");
+          trackCopy(event, caseId);
         } catch {
           setState("Select and copy the text below");
         }
@@ -58,6 +63,19 @@ function Copy({
       {state || label} <span aria-hidden="true">↗</span>
     </button>
   );
+}
+function trackCopy(event: string, caseId?: string) {
+  const analytics = (window as Window & {
+    umami?: { track: (name: string, data?: Record<string, string>) => unknown };
+  }).umami;
+  try {
+    // Analytics failures must never interrupt clipboard feedback.
+    void Promise.resolve(
+      analytics?.track(event, caseId ? { case: caseId } : undefined),
+    ).catch(() => {});
+  } catch {
+    // Tracking is optional when blocked or unavailable.
+  }
 }
 function App() {
   const [cases, setCases] = useState<Case[]>([]),
@@ -131,7 +149,7 @@ function App() {
           <a href="#assembly-viewer">Explore</a>
           <a href="#try">Try it</a>
           <a href="#results">Results</a>
-          <a className="nav-code" href={CODE}>
+          <a className="nav-code" href={CODE} data-umami-event="open-code">
             GitHub ↗
           </a>
         </nav>
@@ -436,10 +454,12 @@ function App() {
             </select>
             <pre tabIndex={0}>{prompt}</pre>
             <div className="prompt-actions">
-              <Copy text={prompt} />
+              <Copy text={prompt} event="copy-agent-prompt" caseId={selected} />
               <a
                 className="button"
                 href={scene}
+                data-umami-event="open-scene"
+                data-umami-event-case={selected}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -549,7 +569,7 @@ function App() {
             <div>
               <h3>Cite this work</h3>
               <p>Use this citation when building on AssemblyWorld.</p>
-              <Copy text={bib} label="Copy BibTeX" />
+              <Copy text={bib} label="Copy BibTeX" event="copy-citation" />
             </div>
             <pre tabIndex={0}>{bib}</pre>
           </div>

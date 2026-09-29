@@ -79,3 +79,7 @@ Small presentation previews are committed under `public/previews/` and regenerat
 The interface selects only cases with complete-assembly success (SR = 1), retaining the three paper interaction examples first. Other archived cases remain available to the asset validation pipeline. The single top viewer stays in place when selections change. Results tables use local versioned data in `src/result-tables.json`.
 
 The viewer defaults to the recorded agent camera with both camera switches enabled. Camera geometry is visible in free view; following the camera naturally hides its own frustum. Exploration and reference controls are grouped separately. The DOM/SVG orientation compass projects world axes into the active camera view, and dragging the scene or selecting an axis exits follow mode without changing recorded poses. A larger ground grid replaces in-scene world axes.
+
+## Analytics
+
+The homepage loads the owner's Umami tracker, restricted to `assemblyworld.github.io` so local previews do not contribute traffic. Only four custom events are recorded: `open-code`, `open-scene`, `copy-agent-prompt`, and `copy-citation`. Scene and prompt events include the selected case ID; clipboard events fire only after a successful copy. Prompt contents and clipboard contents are never sent. Viewer controls are not instrumented. Event tracking follows the [Umami event API](https://docs.umami.is/docs/track-events).
