@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import Viewer from "./Viewer";
+import ResultTables from "./ResultTables";
 import type { Case } from "./types";
 import "./style.css";
 const ENV = "https://assemblyworld.github.io/3DWebAgent/";
@@ -24,16 +25,6 @@ const authors = [
   ["Anoop Cherian", "2", "https://users.cecs.anu.edu.au/~cherian/"],
   ["Stephen Gould", "1", "https://users.cecs.anu.edu.au/~sgould/"],
 ];
-const results = [
-  ["GPT-6 Astra", 59.4],
-  ["Claude Fable 5.1", 50.0],
-  ["Claude Opus 5", 44.4],
-  ["Qwen3.8 Max", 11.9],
-  ["GPT-5.6 Sol", 11.2],
-  ["Claude Sonnet 5", 7.5],
-  ["GPT-5.6 Terra", 7.5],
-  ["DeepSeek V4.1 Flash", 0],
-] as const;
 const bib = `@misc{zhang2026assemblyworld,
   title = {AssemblyWorld: Rethinking 3D Assembly with General-Purpose Agents},
   author = {Zhang, Jiahao and Fan, Yeying and Chatterjee, Moitreya and
@@ -71,7 +62,6 @@ function App() {
   const [cases, setCases] = useState<Case[]>([]),
     [selected, setSelected] = useState(""),
     [filter, setFilter] = useState("All"),
-    [location, setLocation] = useState<"hero" | "gallery">("hero"),
     [error, setError] = useState("");
   const [paper, setPaper] = useState<string | undefined>();
   const local =
@@ -84,6 +74,12 @@ function App() {
         return r.json();
       })
       .then((v) => {
+        v.cases = v.cases
+          .filter((c: Case) => c.variants[0].SR === 1)
+          .map((c: Case) => ({
+            ...c,
+            variants: c.variants.filter((v) => v.SR === 1),
+          }));
         setCases(v.cases);
         const id = new URLSearchParams(window.location.search).get("case");
         setSelected(
@@ -99,7 +95,6 @@ function App() {
   const item = cases.find((c) => c.id === selected);
   const choose = (id: string, scroll = false) => {
     setSelected(id);
-    setLocation("gallery");
     const url = new URL(window.location.href);
     url.searchParams.set("case", id);
     history.replaceState(null, "", url);
@@ -107,7 +102,7 @@ function App() {
       setTimeout(
         () =>
           document
-            .getElementById("gallery-viewer")
+            .getElementById("assembly-viewer")
             ?.scrollIntoView({ behavior: "smooth", block: "center" }),
         60,
       );
@@ -141,165 +136,131 @@ function App() {
         </nav>
       </header>
       <main>
-        {local && (
-          <div className="local-banner">
-            LOCAL PREVIEW · Includes assets awaiting redistribution clearance.
-          </div>
-        )}
+        {local && <div className="local-banner">Local preview</div>}
         <section className="hero" id="overview">
-          <div className="eyebrow">
-            <span /> GENERAL-PURPOSE AGENTS, MEET 3D ASSEMBLY
+          <div className="hero-masthead">
+            <div className="hero-title">
+              <div className="eyebrow">ASSEMBLYWORLD · RESEARCH</div>
+              <h1>
+                Assembly<span>World</span>
+              </h1>
+              <h2>
+                Rethinking 3D Assembly
+                <br />
+                with General-Purpose Agents
+              </h2>
+            </div>
+            <div className="hero-abstract">
+              <p>
+                From scattered parts to assembled objects. A shared 3D world for
+                agents to observe, reason, and build.
+              </p>
+            </div>
           </div>
-          <h1>
-            Assembly<span>World</span>
-          </h1>
-          <h2>
-            Rethinking 3D Assembly
-            <br className="mobile-break" /> with General-Purpose Agents
-          </h2>
-          <p className="hero-description">
-            From scattered parts to assembled objects.
-            <br />
-            Explore how agents observe, act, and refine in an interactive 3D
-            world.
-          </p>
-          <div className="authors">
-            {authors.map(([name, aff, url]) => (
-              <span key={name}>
-                <a href={url} target="_blank" rel="noreferrer">
-                  {name}
+          <div className="paper-meta">
+            <div className="paper-people">
+              <div className="authors">
+                {authors.map(([name, aff, url]) => (
+                  <span key={name}>
+                    <a href={url} target="_blank" rel="noreferrer">
+                      {name}
+                    </a>
+                    <sup>{aff}</sup>
+                  </span>
+                ))}
+              </div>
+              <div className="affiliations">
+                <span>
+                  <sup>1</sup>{" "}
+                  <a
+                    href="https://www.anu.edu.au/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Australian National University
+                  </a>
+                </span>
+                <span>
+                  <sup>2</sup>{" "}
+                  <a
+                    href="https://www.merl.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Mitsubishi Electric Research Laboratories
+                  </a>
+                </span>
+                <span>
+                  <sup>3</sup>{" "}
+                  <a
+                    href="https://www.tsinghua.edu.cn/en/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Tsinghua University
+                  </a>
+                </span>
+                <span>
+                  <sup>4</sup>{" "}
+                  <a
+                    href="https://www.fau.eu/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    FAU Erlangen-Nürnberg
+                  </a>
+                </span>
+              </div>
+              <p className="equal">* Equal contribution</p>
+            </div>
+            <div className="hero-actions">
+              {paper ? (
+                <a className="button dark" href={paper}>
+                  Read the paper ↗
                 </a>
-                <sup>{aff}</sup>
-              </span>
-            ))}
+              ) : (
+                <span className="button unavailable">
+                  Paper · arXiv forthcoming
+                </span>
+              )}
+              <a className="button" href={CODE}>
+                Code ↗
+              </a>
+              <a className="button" href={DATA}>
+                Benchmark · coming soon ↗
+              </a>
+              <a className="button" href={RESULTS}>
+                Results ↗
+              </a>
+              <a className="button accent" href="#gallery">
+                Explore in 3D ↓
+              </a>
+            </div>
           </div>
-          <div className="affiliations">
-            <span>
-              <sup>1</sup>{" "}
-              <a
-                href="https://www.anu.edu.au/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Australian National University
-              </a>
-            </span>
-            <span>
-              <sup>2</sup>{" "}
-              <a href="https://www.merl.com/" target="_blank" rel="noreferrer">
-                Mitsubishi Electric Research Laboratories
-              </a>
-            </span>
-            <span>
-              <sup>3</sup>{" "}
-              <a
-                href="https://www.tsinghua.edu.cn/en/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Tsinghua University
-              </a>
-            </span>
-            <span>
-              <sup>4</sup>{" "}
-              <a href="https://www.fau.eu/" target="_blank" rel="noreferrer">
-                FAU Erlangen-Nürnberg
-              </a>
-            </span>
-          </div>
-          <p className="equal">* Equal contribution</p>
-          <div className="hero-actions">
-            {paper ? (
-              <a className="button dark" href={paper}>
-                Read the paper ↗
-              </a>
-            ) : (
-              <span className="button unavailable">
-                Read the paper · arXiv forthcoming
-              </span>
-            )}
-            <a className="button" href={CODE}>
-              Code ↗
-            </a>
-            <a className="button" href={DATA}>
-              Benchmark · coming soon ↗
-            </a>
-            <a className="button" href={RESULTS}>
-              Results ↗
-            </a>
-            <a className="button accent" href="#gallery">
-              Explore in 3D ↓
-            </a>
-          </div>
-          <div className="hero-scene">
+          <div className="hero-scene" id="assembly-viewer">
             {error ? (
               <p role="alert">{error}</p>
-            ) : item && location === "hero" ? (
-              <Viewer key={item.id} item={item} />
             ) : item ? (
-              <button
-                className="hero-preview"
-                onClick={() => {
-                  setLocation("hero");
-                  window.scrollTo({ top: 300, behavior: "smooth" });
-                }}
-              >
-                <img
-                  src={item.thumbnail}
-                  alt={`${item.title} assembled result`}
-                />
-                <span>Explore this assembly in 3D ↗</span>
-              </button>
+              <Viewer key={item.id} item={item} />
             ) : (
               <div className="load-state">Loading examples…</div>
             )}
           </div>
           <div className="hero-caption">
-            <span>Not a video. A real trajectory you can explore.</span>
+            <span>Orbit the scene. Follow the assembly.</span>
             <a href="#gallery">Discover the examples ↓</a>
           </div>
-        </section>
-        <section
-          className="contributions section"
-          aria-label="Research contributions"
-        >
-          <article>
-            <span className="number">01 / ENVIRONMENT</span>
-            <h3>See. Move. Inspect.</h3>
-            <p>
-              Agents reason from rendered views and manipulate supplied rigid
-              parts through a common tool interface. No direct access to mesh
-              vertices or faces.
-            </p>
-          </article>
-          <article>
-            <span className="number">02 / BENCHMARK</span>
-            <h3>One world. Many assemblies.</h3>
-            <p>
-              100 tasks across 80 objects from four data sources, spanning
-              furniture, industrial assemblies, and fracture reconstruction.
-            </p>
-          </article>
-          <article>
-            <span className="number">03 / EVALUATION</span>
-            <h3>Measure the geometry.</h3>
-            <p>
-              Eight agent systems, without assembly-specific fine-tuning. We
-              evaluate the resulting geometry, not the agent’s claim of
-              completion.
-            </p>
-          </article>
         </section>
         <section className="section gallery" id="gallery">
           <div className="section-heading">
             <div>
               <div className="eyebrow">EXPLORE THE WORK</div>
-              <h2>Assembly, step by step.</h2>
+              <h2>Choose an assembly.</h2>
             </div>
             <p>
-              Pick an object. Orbit the scene.
+              Furniture, mechanisms, and fragments.
               <br />
-              Follow the decisions that brought its parts together.
+              Select a scene to explore above.
             </p>
           </div>
           <div className="gallery-toolbar">
@@ -358,7 +319,7 @@ function App() {
                 cases.filter((c) => filter === "All" || c.dataset === filter)
                   .length
               }{" "}
-              interactive examples
+              successful assemblies
             </span>
           </div>
           <div
@@ -373,14 +334,14 @@ function App() {
                 <button
                   className={"case-card " + (c.id === selected ? "active" : "")}
                   key={c.id}
-                  onClick={() => choose(c.id, true)}
+                  onClick={() => choose(c.id)}
                   aria-pressed={c.id === selected}
                 >
                   <div className="card-image">
                     <img
                       src={c.thumbnail}
                       loading="lazy"
-                      alt={`${c.title}, recorded final assembly`}
+                      alt={`${c.title}, assembled object`}
                       onError={(e) => {
                         e.currentTarget.style.visibility = "hidden";
                       }}
@@ -392,7 +353,6 @@ function App() {
                   </div>
                   <div className="card-text">
                     <div className="card-meta">
-                      {c.featured ? "Paper example · " : ""}
                       {c.dataset} <span>{c.parts} parts</span>
                     </div>
                     <h3>{c.title}</h3>
@@ -415,23 +375,14 @@ function App() {
               release. Explore the full benchmark in the resources below.
             </p>
           )}
-          <p className="gallery-caption">
-            Curated examples illustrate behavior, not aggregate performance.
-            “Complete” means all parts pass the recorded geometric threshold.
-          </p>
-          {item && location === "gallery" && (
-            <div id="gallery-viewer">
-              <Viewer key={item.id} item={item} />
-            </div>
-          )}
         </section>
         <section className="section try-section" id="try">
           <div className="try-intro">
-            <div className="eyebrow">YOUR AGENT. OUR WORLD.</div>
+            <div className="eyebrow">TRY WITH YOUR AGENT</div>
             <h2>
-              Give your agent
+              Your agent.
               <br />
-              something to assemble.
+              The next move.
             </h2>
             <p>
               Copy the prompt into your agent with browser WebMCP access. Watch
@@ -493,6 +444,37 @@ function App() {
             </div>
           </div>
         </section>
+        <section
+          className="contributions section"
+          aria-label="Research contributions"
+        >
+          <article>
+            <span className="number">01 / ENVIRONMENT</span>
+            <h3>See. Move. Inspect.</h3>
+            <p>
+              Agents reason from rendered views and manipulate supplied rigid
+              parts through a common tool interface. No direct access to mesh
+              vertices or faces.
+            </p>
+          </article>
+          <article>
+            <span className="number">02 / BENCHMARK</span>
+            <h3>One world. Many assemblies.</h3>
+            <p>
+              100 tasks across 80 objects from four data sources, spanning
+              furniture, industrial assemblies, and fracture reconstruction.
+            </p>
+          </article>
+          <article>
+            <span className="number">03 / EVALUATION</span>
+            <h3>Measure the geometry.</h3>
+            <p>
+              Eight agent systems, without assembly-specific fine-tuning. We
+              evaluate the resulting geometry, not the agent’s claim of
+              completion.
+            </p>
+          </article>
+        </section>
         <section className="section method" id="method">
           <div className="section-heading">
             <div>
@@ -537,7 +519,7 @@ function App() {
                 assembly.
               </p>
               <a href="#gallery" className="inline-link">
-                Inspect real tool calls ↑
+                Explore an assembly ↑
               </a>
             </article>
           </div>
@@ -546,70 +528,15 @@ function App() {
           <div className="section-heading">
             <div>
               <div className="eyebrow">RESULTS & INSIGHTS</div>
-              <h2>Structure is only the beginning.</h2>
+              <h2>Evaluating assembly intelligence.</h2>
             </div>
             <p>
-              Recognizing an assembly is easier
+              From a shared benchmark to individual datasets.
               <br />
-              than getting every part precisely into place.
+              Explore performance across tasks and reference conditions.
             </p>
           </div>
-          <div className="results-layout">
-            <div className="chart">
-              <div className="chart-title">
-                <h3>Complete-assembly success</h3>
-                <span>overall SR (%)</span>
-              </div>
-              {results.map(([name, score], i) => (
-                <div className="bar-row" key={name}>
-                  <span>{name}</span>
-                  <div className="bar-track">
-                    <div
-                      className={i === 0 ? "bar lead" : "bar"}
-                      style={{ width: `${score}%` }}
-                    />
-                  </div>
-                  <strong>{score.toFixed(1)}</strong>
-                </div>
-              ))}
-              <p className="fine-print">
-                AssemblyWorldBench · 100 tasks / 80 objects. Source-balanced
-                aggregation: average reference conditions within each source,
-                then average the four sources. Values rounded as in the paper.
-              </p>
-            </div>
-            <div className="insights">
-              <div className="stat-pair">
-                <div>
-                  <strong>
-                    80.9<span>%</span>
-                  </strong>
-                  <span>part accuracy</span>
-                </div>
-                <div>
-                  <strong>
-                    59.4<span>%</span>
-                  </strong>
-                  <span>assembly success</span>
-                </div>
-              </div>
-              <p>
-                The strongest evaluated system assembles many parts correctly,
-                but complete reconstruction remains harder.
-              </p>
-              <h3>References help; precision still matters.</h3>
-              <p>
-                Visual guidance improves performance for stronger systems.
-                Inspection and corrections can resolve errors, yet
-                plausible-looking results may still miss geometric thresholds.
-              </p>
-              <div className="scope-note">
-                These experiments evaluate free-space geometry. They do not
-                establish collision-free execution or physically stable
-                assembly.
-              </div>
-            </div>
-          </div>
+          <ResultTables />
         </section>
         <section className="section resources" id="resources">
           <div className="section-heading">
@@ -651,10 +578,7 @@ function App() {
           <div className="citation">
             <div>
               <h3>Cite this work</h3>
-              <p>
-                Project citation. Publication details will be updated when
-                available.
-              </p>
+              <p>Use this citation when building on AssemblyWorld.</p>
               <Copy text={bib} label="Copy BibTeX" />
             </div>
             <pre tabIndex={0}>{bib}</pre>
@@ -667,7 +591,7 @@ function App() {
           AssemblyWorld.
         </a>
         <p>Assembly is a world of possibilities.</p>
-        <a href="/asset-terms.html">Asset terms & attribution</a>
+        <a href="/asset-terms.html">Terms & attribution</a>
         <a href="https://github.com/AssemblyWorld/assemblyworld.github.io">
           Website source ↗
         </a>

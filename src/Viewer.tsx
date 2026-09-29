@@ -37,7 +37,7 @@ export default function Viewer({ item }: { item: Case }) {
           (x) => x.toString(16).padStart(2, "0"),
         ).join("");
         if (hash !== v.sha256)
-          throw Error("Trajectory integrity check failed.");
+          throw Error("The assembly could not be loaded. Please try again.");
         const run = JSON.parse(new TextDecoder().decode(bytes)) as Run;
         if (run.version !== 1 || !run.states["0"])
           throw Error("Unsupported trajectory format.");
@@ -49,7 +49,7 @@ export default function Viewer({ item }: { item: Case }) {
           (x) => x.toString(16).padStart(2, "0"),
         ).join("");
         if (gh !== run.geometry.sha256)
-          throw Error("Geometry integrity check failed.");
+          throw Error("The assembly could not be loaded. Please try again.");
         run.parts.forEach((p) => {
           p.positions = new Float32Array(
             buffer,
@@ -94,7 +94,7 @@ export default function Viewer({ item }: { item: Case }) {
     <div className="viewer" data-testid="viewer">
       <div className="viewer-header">
         <div>
-          <span className="status-dot" /> RECORDED AGENT RUN{" "}
+          <span className="status-dot" /> INTERACTIVE REPLAY{" "}
           <span className="viewer-case">/ {item.title}</span>
         </div>
         <button
@@ -133,13 +133,21 @@ export default function Viewer({ item }: { item: Case }) {
         ) : (
           <div className="load-state">
             <span className="spinner" />
-            Loading the recorded geometry…
+            Loading the assembly…
           </div>
         )}
         <div className="stage-note">
           {followCamera
-            ? "RECORDED CAMERA · 4:3 VIEW · TURN OFF FOLLOW TO ORBIT"
+            ? "AGENT CAMERA · TURN OFF FOLLOW TO EXPLORE"
             : "DRAG TO ORBIT · SCROLL TO ZOOM · CLICK A PART"}
+        </div>
+        <div
+          className="axis-legend"
+          aria-label="World axes: X red, Y green, Z blue"
+        >
+          <span>X</span>
+          <span>Y</span>
+          <span>Z ↑</span>
         </div>
         {compare && (
           <div className="pane-labels">
@@ -225,7 +233,7 @@ export default function Viewer({ item }: { item: Case }) {
               <div className="track-heading">
                 <strong>{v.label}</strong>
                 <span>
-                  PA {(v.PA * 100).toFixed(1)}%{" "}
+                  Part accuracy {(v.PA * 100).toFixed(1)}%{" "}
                   <span className={v.SR ? "success" : "partial"}>
                     {v.SR ? "Complete" : "Incomplete"}
                   </span>
@@ -275,41 +283,23 @@ export default function Viewer({ item }: { item: Case }) {
                     ? call
                       ? `${String(cursors[i]).padStart(3, "0")} · ${call.name}`
                       : "000 · Initial state"
-                    : "Explore the trajectory to inspect recorded tool calls"}{" "}
-                  <span>View arguments</span>
+                    : "Explore the timeline to see the agent’s actions"}{" "}
+                  <span>Tool call</span>
                 </summary>
                 <pre>{JSON.stringify(call?.arguments ?? {}, null, 2)}</pre>
-                {call && (
-                  <small>
-                    {call.timestamp} · {call.status}
-                  </small>
-                )}
-              </details>
-              <details className="provenance">
-                <summary>Run & evaluation provenance</summary>
-                <p>{v.runId}</p>
-                <p>
-                  PA: {(v.PA * 100).toFixed(1)}% · SR: {v.SR} · SCD:{" "}
-                  {v.SCD.toFixed(4)}
-                  <br />
-                  Protocol: assembly-evaluation-v2. Values are recorded
-                  final-state scores.
-                </p>
-                <p>Episode SHA-256: {v.episodeSHA256}</p>
               </details>
             </div>
           );
         })}
       </div>
-      <p className="viewer-footnote">
-        Real recorded steps, without interpolated motion. Part colors are for
-        presentation. All views use the final evaluation’s global rigid
-        alignment. {mode === "overlay" ? "Teal wireframe: ground truth. " : ""}
-        {followCamera
-          ? "Following each run’s recorded camera pose and field of view; appearance is re-rendered. "
-          : ""}
-        Free-space geometry; physical stability is not evaluated.
-      </p>
+      {(mode === "overlay" || followCamera) && (
+        <p className="viewer-footnote">
+          {mode === "overlay" ? "Teal outline: target assembly. " : ""}
+          {followCamera
+            ? "Following the agent’s camera. Turn off Follow to explore freely."
+            : ""}
+        </p>
+      )}
     </div>
   );
 }

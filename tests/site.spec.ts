@@ -41,7 +41,7 @@ test("gallery selection stays in sync with Try and is immediately followed by it
   await expect(page.locator(".case-card")).toHaveCount(12);
   await page.locator(".case-card").nth(1).click();
   await expect(page.locator("#try-case")).toHaveValue("fantastic-00-00017");
-  await expect(page.locator("#gallery-viewer canvas")).toBeVisible();
+  await expect(page.locator("#assembly-viewer canvas")).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(1);
   expect(
     await page.locator("#gallery").evaluate((el) => el.nextElementSibling?.id),
@@ -52,9 +52,9 @@ test("gallery selection stays in sync with Try and is immediately followed by it
   await expect(
     page.getByRole("link", { name: "Open scene ↗", exact: true }),
   ).toHaveAttribute("href", /3DWebAgent\/\?episode=.*initial\.episode\.zip/);
-  await page.locator("#try-case").selectOption("assemblybench-1386");
-  await expect(page.locator(".case-card.active")).toContainText("1386");
-  await expect(page.locator("#gallery-viewer canvas")).toBeVisible();
+  await page.locator("#try-case").selectOption("assemblybench-7355");
+  await expect(page.locator(".case-card.active")).toContainText("7355");
+  await expect(page.locator("#assembly-viewer canvas")).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -62,8 +62,8 @@ test("gallery selection stays in sync with Try and is immediately followed by it
   ).toBe(true);
 });
 test("deep link, terms and citation remain accessible", async ({ page }) => {
-  await page.goto("/?case=assemblybench-1386");
-  await expect(page.locator("#try-case")).toHaveValue("assemblybench-1386");
+  await page.goto("/?case=assemblybench-7355");
+  await expect(page.locator("#try-case")).toHaveValue("assemblybench-7355");
   await expect(page.locator(".citation pre")).toContainText(
     "@misc{zhang2026assemblyworld",
   );
@@ -90,17 +90,19 @@ test("clear fallback when WebGL is unavailable", async ({ page }) => {
     "Interactive 3D is unavailable",
   );
 });
-test("all local examples load and expose their complete recorded timeline", async ({
+test("all twelve successful examples expose their complete recorded timeline", async ({
   page,
 }, info) => {
   test.skip(
-    info.project.name !== "chrome" || !!process.env.SITE_URL,
-    "Local full catalog smoke test",
+    info.project.name !== "chrome",
+    "Full catalog smoke test runs in Chrome",
   );
-  const catalog = await (await page.request.get("/catalog.local.json")).json();
+  const catalog = await (await page.request.get("/catalog.json")).json();
   expect(catalog.cases).toHaveLength(12);
-  for (const c of catalog.cases) {
-    await page.goto(`/?preview=local&case=${c.id}`);
+  for (const c of catalog.cases.filter(
+    (item: { variants: { SR: number }[] }) => item.variants[0].SR === 1,
+  )) {
+    await page.goto(`/?case=${c.id}`);
     await expect(page.locator("canvas")).toBeVisible({ timeout: 80000 });
     const slider = page.getByRole("slider", { name: "Trajectory step 1" });
     await expect(slider).toHaveAttribute("max", String(c.variants[0].calls));
@@ -126,11 +128,21 @@ test("dataset tabs, paper examples, author links and unpublished paper", async (
     "AssemblyBench",
     "Fantastic Breaks",
   ]) {
-    await page.getByRole("tab", { name, exact: true }).click();
-    await expect(page.locator(".case-card")).toHaveCount(3);
+    await page
+      .locator("#gallery")
+      .getByRole("tab", { name, exact: true })
+      .click();
+    await expect(page.locator(".case-card")).toHaveCount(
+      { PartNet: 3, "IKEA-Manual": 3, AssemblyBench: 3, "Fantastic Breaks": 3 }[
+        name
+      ]!,
+    );
     await expect(page.locator(".case-card").first()).toContainText(name);
   }
-  await page.getByRole("tab", { name: "PartNet", exact: true }).press("Home");
+  await page
+    .locator("#gallery")
+    .getByRole("tab", { name: "PartNet", exact: true })
+    .press("Home");
   await expect(
     page.getByRole("tab", { name: "All", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
@@ -156,7 +168,7 @@ test("recorded camera follows the timeline and ignores free-orbit input", async 
   await page.getByLabel("Show agent camera", { exact: true }).check();
   await page.getByRole("button", { name: "Next step 1", exact: true }).click();
   await page.getByLabel("Follow agent camera", { exact: true }).check();
-  await expect(page.locator(".stage-note")).toContainText("RECORDED CAMERA");
+  await expect(page.locator(".stage-note")).toContainText("AGENT CAMERA");
   const slider = page.getByRole("slider", { name: "Trajectory step 1" });
   await slider.fill("20");
   await expect(slider).toHaveValue("20");
@@ -209,4 +221,56 @@ test("free-view zoom reaches finite minimum and maximum distances", async ({
   await expect(
     page.getByRole("slider", { name: "Trajectory step 1" }),
   ).toHaveValue("0");
+});
+
+test("research page omits internal provenance and remains readable", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.locator(".provenance")).toHaveCount(0);
+  const text = await page.locator("body").innerText();
+  expect(text).not.toMatch(
+    /provenance|SHA-256|checksum|assembly-evaluation|global rigid alignment|source-balanced/i,
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+  await page.getByRole("button", { name: "Next step 1", exact: true }).click();
+  await page.locator(".call-details summary").click();
+  await expect(page.locator(".call-details pre")).toBeVisible();
+  await expect(page.locator(".call-details small")).toHaveCount(0);
+});
+
+test("single top viewer, successful horizontal selector and five dataset result tabs", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator("#assembly-viewer canvas")).toBeVisible();
+  await expect(page.locator(".case-card")).toHaveCount(12);
+  await expect(page.locator(".case-card.partial")).toHaveCount(0);
+  expect(
+    await page
+      .locator(".cards")
+      .evaluate((el) => el.scrollWidth > el.clientWidth),
+  ).toBe(true);
+  await expect(page.locator(".result-tabs [aria-selected=true]")).toHaveText(
+    "AssemblyWorldBench",
+  );
+  await expect(page.locator("#paper-table")).toContainText("59.40");
+  for (const [dataset, value] of [
+    ["PartNet", "76.45"],
+    ["IKEA-Manual", "93.27"],
+    ["AssemblyBench", "78.32"],
+    ["Fantastic Breaks", "91.67"],
+  ]) {
+    await page
+      .locator(".result-tabs")
+      .getByRole("tab", { name: String(dataset), exact: true })
+      .click();
+    await expect(page.locator("#paper-table")).toContainText(String(value));
+  }
+  await expect(page.locator("canvas")).toHaveCount(1);
 });

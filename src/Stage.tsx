@@ -45,7 +45,7 @@ export default function Stage(props: Props) {
     }
     setError("");
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor("#f0f0e9");
+    renderer.setClearColor("#eeedf4");
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.domElement.setAttribute(
       "aria-label",
@@ -105,6 +105,34 @@ export default function Stage(props: Props) {
         scene.add(g);
         return g;
       });
+      // Keep helpers fixed in the recorded world frame (Z up).
+      const worldBounds = new THREE.Box3();
+      meshes.forEach((mesh, j) => {
+        mesh.position.fromArray(run.groundTruth[j]);
+        mesh.quaternion.fromArray(run.groundTruth[j], 3);
+        mesh.updateMatrixWorld();
+        worldBounds.expandByObject(mesh, true);
+      });
+      const extent = Math.max(
+        worldBounds.getSize(new THREE.Vector3()).length(),
+        0.1,
+      );
+      const grid = new THREE.GridHelper(extent * 2.5, 20, 0xa9b3c4, 0xdce1e8);
+      grid.rotation.x = Math.PI / 2;
+      grid.position.z = worldBounds.min.z - extent * 0.005;
+      const gridCenter = worldBounds.getCenter(new THREE.Vector3());
+      grid.position.x = gridCenter.x;
+      grid.position.y = gridCenter.y;
+      const axes = new THREE.AxesHelper(extent * 0.5);
+      scene.add(grid, axes);
+      geometries.push(grid.geometry, axes.geometry);
+      for (const helper of [grid, axes]) {
+        materials.push(
+          ...(Array.isArray(helper.material)
+            ? helper.material
+            : [helper.material]),
+        );
+      }
       const recordedCamera = new THREE.PerspectiveCamera(38, 4 / 3, 0.01, 1);
       const helper = new THREE.CameraHelper(recordedCamera);
       helper.setColors(

@@ -9,14 +9,15 @@ page.on("pageerror", (e) => console.error(e));
 const catalog = JSON.parse(
   await fs.readFile("public/catalog.local.json", "utf8"),
 );
-for (const c of catalog.cases) {
-  await page.goto(`http://127.0.0.1:5173/?preview=local&case=${c.id}`);
+await fs.mkdir("public/previews", { recursive: true });
+for (const c of catalog.cases.filter((c) => c.variants[0].SR === 1)) {
+  await page.goto(`http://127.0.0.1:4173/?case=${c.id}`);
   await page.locator("canvas").waitFor({ timeout: 90000 });
   await page.waitForTimeout(1200);
-  await page.locator(".stage").screenshot({ path: `public${c.thumbnail}` });
+  await page.locator("canvas").screenshot({ path: `public${c.thumbnail}` });
   console.log("preview", c.id);
 }
-await page.goto("http://127.0.0.1:5173/");
+await page.goto("http://127.0.0.1:4173/");
 await page.locator("canvas").waitFor();
 await page.waitForTimeout(1000);
 await page.screenshot({ path: ".local/home-desktop.png", fullPage: true });

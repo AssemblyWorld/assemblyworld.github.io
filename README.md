@@ -56,11 +56,11 @@ Open `http://127.0.0.1:5173/?preview=local` for all twelve cases. The local cata
 - Playback: initial state plus every recorded tool call. Read-only calls may repeat a state. No interpolation. Ground-truth overlays do not change agent state. Independent runs are never matched by call index.
 - Initial episodes and selected source reference pages are copied unchanged and checksummed. Answers and final trajectories are not embedded in initial episodes or copied prompts.
 
-Release creation uses `python3 scripts/bundle_assets.py`; upload `.local/media-v2.tar.gz` under the immutable tag named in `assets.lock.json`. Update both tag/URL and lock for subsequent releases; never silently replace a published archive. CI verifies checksum and per-case integrity before building.
+Release creation uses `python3 scripts/bundle_assets.py`; upload `.local/media-v3.tar.gz` under the immutable tag named in `assets.lock.json`. Update both tag/URL and lock for subsequent releases; never silently replace a published archive. CI verifies checksum and per-case integrity before building.
 
 ## Validation
 
-Playwright covers scene loading, all twelve local timelines, selection synchronization, one-context comparison, independent playback cursors, highlighting, ground truth, WebGL fallback, deep links and mobile overflow. `scripts/check_assets.py` verifies initial archives, asset hashes, geometry index ranges, call/state consistency and normalized quaternions. Real browser previews and local export audits are intentionally retained in `.local/` for review and excluded from Git.
+Playwright covers scene loading, all twelve successful presentation timelines, selection synchronization, one-context comparison, independent playback cursors, highlighting, ground truth, WebGL fallback, deep links and mobile overflow. `scripts/check_assets.py` verifies initial archives, asset hashes, geometry index ranges, call/state consistency and normalized quaternions. Real browser previews and local export audits are intentionally retained in `.local/` for review and excluded from Git.
 
 The website does not host inference. Copied prompts use the live 3DWebAgent environment and the selected **initial** episode URL. Connection instructions link to the current 3DWebAgent README.
 
@@ -69,3 +69,11 @@ The website does not host inference. Copied prompts use the live 3DWebAgent envi
 Every recorded camera position and target is transformed using the same evaluation alignment as the parts. Its up vector is rotated too. Follow mode preserves the source renderer’s 38-degree vertical field of view and 4:3 viewport, with letterboxing; it re-renders the geometry rather than claiming pixel-identical observations. Each comparison pane follows its own timeline and camera. Free orbit has scene-scaled minimum/maximum distances; it never edits recorded camera data. Camera helpers show location and direction without drawing a full-length frustum over the model.
 
 Author links were checked against personal/institutional pages on 2026-09-29. Yeying Fan uses the available ResearchGate profile (matching the orthodontic assembly publications) because no verified personal homepage, Google Scholar profile or LinkedIn page was found. The benchmark Hugging Face destination is retained as coming soon at the owner's request. Results point to the public dataset page; downloading that dataset currently requires access approval.
+
+## Presentation
+
+The public UI uses a centered research layout with neutral controls and a muted lavender scene and full-width assembly views. Design references and decisions are in `docs/design.md`. Run IDs, checksums, timestamps, protocol labels and export/alignment notes stay in the data and internal documentation; they are not shown in the research page. The player keeps only actions and controls needed to explore the assembly.
+
+Small presentation previews are committed under `public/previews/` and regenerated from the current canvas via `node scripts/preview.mjs`. `stage-public.mjs` renders reference pages into the same visual language without exposing export metadata, while preserving reference images and required attribution. Geometry and original episodes remain pinned by the release lock.
+
+The interface selects only cases with complete-assembly success (SR = 1), retaining the three paper interaction examples first. Other archived cases remain available to the asset validation pipeline. The single top viewer stays in place when selections change. Results tables use local versioned data in `src/result-tables.json`.

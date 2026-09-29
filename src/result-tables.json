@@ -1,0 +1,1636 @@
+[
+  {
+    "number": 1,
+    "title": "AssemblyWorldBench",
+    "headers": [
+      "Agent",
+      "Harness",
+      "PartNet \u00b7 NR",
+      "PartNet \u00b7 IR",
+      "IKEA \u00b7 M",
+      "AssemblyBench \u00b7 M",
+      "Fantastic Breaks \u00b7 NR",
+      "overall SR (%)",
+      "Time (min)",
+      "MCP calls",
+      "Tokens (M)",
+      "Cost ($)"
+    ],
+    "note": "Success rate (%) and mean resource use across eight agents. NR: no reference; IR: assembled-object image; M: manual. Bold indicates the highest success rate or lowest resource use.",
+    "rows": [
+      [
+        {
+          "text": "DeepSeek V4.1 Flash",
+          "bold": false
+        },
+        {
+          "text": "Codex",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "26.7",
+          "bold": false
+        },
+        {
+          "text": "186",
+          "bold": false
+        },
+        {
+          "text": "2.59",
+          "bold": false
+        },
+        {
+          "text": "0.16",
+          "bold": true
+        }
+      ],
+      [
+        {
+          "text": "Qwen3.8 Max",
+          "bold": false
+        },
+        {
+          "text": "Codex",
+          "bold": false
+        },
+        {
+          "text": "5.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "10.00",
+          "bold": false
+        },
+        {
+          "text": "35.00",
+          "bold": false
+        },
+        {
+          "text": "11.90",
+          "bold": false
+        },
+        {
+          "text": "54.5",
+          "bold": false
+        },
+        {
+          "text": "107",
+          "bold": false
+        },
+        {
+          "text": "3.67",
+          "bold": false
+        },
+        {
+          "text": "1.67",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Claude Sonnet 5",
+          "bold": false
+        },
+        {
+          "text": "Claude Code",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "5.000",
+          "bold": false
+        },
+        {
+          "text": "25.00",
+          "bold": false
+        },
+        {
+          "text": "7.500",
+          "bold": false
+        },
+        {
+          "text": "20.6",
+          "bold": false
+        },
+        {
+          "text": "196",
+          "bold": false
+        },
+        {
+          "text": "16.45",
+          "bold": false
+        },
+        {
+          "text": "4.72",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Claude Opus 5",
+          "bold": false
+        },
+        {
+          "text": "Claude Code",
+          "bold": false
+        },
+        {
+          "text": "10.00",
+          "bold": false
+        },
+        {
+          "text": "25.00",
+          "bold": false
+        },
+        {
+          "text": "50.00",
+          "bold": false
+        },
+        {
+          "text": "40.00",
+          "bold": false
+        },
+        {
+          "text": "70.00",
+          "bold": false
+        },
+        {
+          "text": "44.40",
+          "bold": false
+        },
+        {
+          "text": "37.0",
+          "bold": false
+        },
+        {
+          "text": "180",
+          "bold": false
+        },
+        {
+          "text": "16.89",
+          "bold": false
+        },
+        {
+          "text": "12.38",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Claude Fable 5.1",
+          "bold": false
+        },
+        {
+          "text": "Claude Code",
+          "bold": false
+        },
+        {
+          "text": "5.000",
+          "bold": false
+        },
+        {
+          "text": "25.00",
+          "bold": false
+        },
+        {
+          "text": "50.00",
+          "bold": false
+        },
+        {
+          "text": "45.00",
+          "bold": false
+        },
+        {
+          "text": "90.00",
+          "bold": true
+        },
+        {
+          "text": "50.00",
+          "bold": false
+        },
+        {
+          "text": "22.1",
+          "bold": false
+        },
+        {
+          "text": "162",
+          "bold": false
+        },
+        {
+          "text": "4.60",
+          "bold": false
+        },
+        {
+          "text": "6.84",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "GPT-5.6 Terra",
+          "bold": false
+        },
+        {
+          "text": "Codex",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "30.00",
+          "bold": false
+        },
+        {
+          "text": "7.500",
+          "bold": false
+        },
+        {
+          "text": "4.0",
+          "bold": true
+        },
+        {
+          "text": "60",
+          "bold": true
+        },
+        {
+          "text": "1.32",
+          "bold": false
+        },
+        {
+          "text": "0.50",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "GPT-5.6 Sol",
+          "bold": false
+        },
+        {
+          "text": "Codex",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "5.000",
+          "bold": false
+        },
+        {
+          "text": "10.00",
+          "bold": false
+        },
+        {
+          "text": "30.00",
+          "bold": false
+        },
+        {
+          "text": "11.20",
+          "bold": false
+        },
+        {
+          "text": "8.7",
+          "bold": false
+        },
+        {
+          "text": "208",
+          "bold": false
+        },
+        {
+          "text": "2.77",
+          "bold": false
+        },
+        {
+          "text": "1.79",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "GPT-6 Astra",
+          "bold": false
+        },
+        {
+          "text": "Codex",
+          "bold": false
+        },
+        {
+          "text": "15.00",
+          "bold": true
+        },
+        {
+          "text": "40.00",
+          "bold": true
+        },
+        {
+          "text": "65.00",
+          "bold": true
+        },
+        {
+          "text": "55.00",
+          "bold": true
+        },
+        {
+          "text": "90.00",
+          "bold": true
+        },
+        {
+          "text": "59.40",
+          "bold": true
+        },
+        {
+          "text": "5.8",
+          "bold": false
+        },
+        {
+          "text": "94",
+          "bold": false
+        },
+        {
+          "text": "1.08",
+          "bold": true
+        },
+        {
+          "text": "2.02",
+          "bold": false
+        }
+      ]
+    ]
+  },
+  {
+    "number": 2,
+    "title": "PartNet",
+    "headers": [
+      "Method",
+      "Condition",
+      "SCD \u2193 \u00b7 Chair",
+      "SCD \u2193 \u00b7 Table",
+      "SCD \u2193 \u00b7 Storage",
+      "PA \u2191 \u00b7 Chair",
+      "PA \u2191 \u00b7 Table",
+      "PA \u2191 \u00b7 Storage",
+      "SR \u2191 \u00b7 Chair",
+      "SR \u2191 \u00b7 Table",
+      "SR \u2191 \u00b7 Storage"
+    ],
+    "note": "Astra uses no target reference (\u2014) or an image of the assembled furniture. Scene observation is available in both conditions.",
+    "rows": [
+      [
+        {
+          "text": "DGL (NeurIPS'20)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "9.1",
+          "bold": false
+        },
+        {
+          "text": "5.0",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "39.00",
+          "bold": false
+        },
+        {
+          "text": "49.51",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "RGL (WACV'22)",
+          "bold": false
+        },
+        {
+          "text": "Sequence",
+          "bold": false
+        },
+        {
+          "text": "8.7",
+          "bold": false
+        },
+        {
+          "text": "4.8",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "49.06",
+          "bold": false
+        },
+        {
+          "text": "54.16",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "IET (RA-L'22)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "5.4",
+          "bold": false
+        },
+        {
+          "text": "3.5",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "62.80",
+          "bold": false
+        },
+        {
+          "text": "61.67",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Score-PA (BMVC'23)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "7.4",
+          "bold": false
+        },
+        {
+          "text": "4.5",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "42.11",
+          "bold": false
+        },
+        {
+          "text": "51.55",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "8.320",
+          "bold": false
+        },
+        {
+          "text": "11.23",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "CCS (AAAI'24)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "7.0",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "53.59",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "3DHPA (CVPR'24)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "5.1",
+          "bold": false
+        },
+        {
+          "text": "2.8",
+          "bold": true
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "64.13",
+          "bold": false
+        },
+        {
+          "text": "64.83",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Joint-PA (CVPR'24)",
+          "bold": false
+        },
+        {
+          "text": "Joint",
+          "bold": false
+        },
+        {
+          "text": "6.0",
+          "bold": false
+        },
+        {
+          "text": "7.0",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "72.80",
+          "bold": true
+        },
+        {
+          "text": "67.40",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "SPAFormer (3DV'25)",
+          "bold": false
+        },
+        {
+          "text": "Sequence",
+          "bold": false
+        },
+        {
+          "text": "6.7",
+          "bold": false
+        },
+        {
+          "text": "3.8",
+          "bold": false
+        },
+        {
+          "text": "4.5",
+          "bold": true
+        },
+        {
+          "text": "55.88",
+          "bold": false
+        },
+        {
+          "text": "64.38",
+          "bold": false
+        },
+        {
+          "text": "56.11",
+          "bold": true
+        },
+        {
+          "text": "16.40",
+          "bold": false
+        },
+        {
+          "text": "33.50",
+          "bold": false
+        },
+        {
+          "text": "7.850",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "CFPA (NeurIPS'25)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "4.9",
+          "bold": true
+        },
+        {
+          "text": "3.3",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "69.24",
+          "bold": false
+        },
+        {
+          "text": "68.48",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Assembler (SA'25)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "9.2",
+          "bold": false
+        },
+        {
+          "text": "8.0",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "61.85",
+          "bold": false
+        },
+        {
+          "text": "65.04",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "22.59",
+          "bold": false
+        },
+        {
+          "text": "39.07",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "GPT-6 Astra + Codex",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "69.9",
+          "bold": false
+        },
+        {
+          "text": "47.0",
+          "bold": false
+        },
+        {
+          "text": "141.6",
+          "bold": false
+        },
+        {
+          "text": "55.68",
+          "bold": false
+        },
+        {
+          "text": "71.39",
+          "bold": true
+        },
+        {
+          "text": "50.06",
+          "bold": false
+        },
+        {
+          "text": "22.63",
+          "bold": true
+        },
+        {
+          "text": "48.97",
+          "bold": true
+        },
+        {
+          "text": "12.84",
+          "bold": true
+        }
+      ],
+      [
+        {
+          "text": "Image-PA (ECCV'20)",
+          "bold": false
+        },
+        {
+          "text": "Image",
+          "bold": false
+        },
+        {
+          "text": "6.7",
+          "bold": false
+        },
+        {
+          "text": "3.7",
+          "bold": false
+        },
+        {
+          "text": "5.0",
+          "bold": false
+        },
+        {
+          "text": "45.40",
+          "bold": false
+        },
+        {
+          "text": "71.60",
+          "bold": false
+        },
+        {
+          "text": "40.20",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Manual-PA (ICCV'25)",
+          "bold": false
+        },
+        {
+          "text": "Image",
+          "bold": false
+        },
+        {
+          "text": "5.9",
+          "bold": false
+        },
+        {
+          "text": "3.9",
+          "bold": false
+        },
+        {
+          "text": "3.7",
+          "bold": false
+        },
+        {
+          "text": "62.67",
+          "bold": false
+        },
+        {
+          "text": "70.10",
+          "bold": false
+        },
+        {
+          "text": "47.79",
+          "bold": false
+        },
+        {
+          "text": "19.97",
+          "bold": false
+        },
+        {
+          "text": "32.83",
+          "bold": false
+        },
+        {
+          "text": "4.730",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Imagine (AAAI'25)",
+          "bold": false
+        },
+        {
+          "text": "Image",
+          "bold": false
+        },
+        {
+          "text": "4.2",
+          "bold": true
+        },
+        {
+          "text": "2.5",
+          "bold": true
+        },
+        {
+          "text": "2.4",
+          "bold": true
+        },
+        {
+          "text": "65.88",
+          "bold": false
+        },
+        {
+          "text": "65.13",
+          "bold": false
+        },
+        {
+          "text": "56.35",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Assembler (SA'25)",
+          "bold": false
+        },
+        {
+          "text": "Image",
+          "bold": false
+        },
+        {
+          "text": "7.2",
+          "bold": false
+        },
+        {
+          "text": "4.7",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "66.17",
+          "bold": false
+        },
+        {
+          "text": "70.44",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "24.92",
+          "bold": false
+        },
+        {
+          "text": "43.46",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "GPT-6 Astra + Codex",
+          "bold": false
+        },
+        {
+          "text": "Image",
+          "bold": false
+        },
+        {
+          "text": "29.5",
+          "bold": false
+        },
+        {
+          "text": "21.0",
+          "bold": false
+        },
+        {
+          "text": "184.8",
+          "bold": false
+        },
+        {
+          "text": "76.45",
+          "bold": true
+        },
+        {
+          "text": "85.35",
+          "bold": true
+        },
+        {
+          "text": "63.87",
+          "bold": true
+        },
+        {
+          "text": "43.36",
+          "bold": true
+        },
+        {
+          "text": "63.60",
+          "bold": true
+        },
+        {
+          "text": "20.27",
+          "bold": true
+        }
+      ]
+    ]
+  },
+  {
+    "number": 3,
+    "title": "IKEA-Manual",
+    "headers": [
+      "Method",
+      "Chair/Table \u00b7 SCD \u2193",
+      "Chair/Table \u00b7 PA \u2191",
+      "Chair/Table \u00b7 SR \u2191",
+      "Bench/Chair/Desk \u00b7 SCD \u2193",
+      "Bench/Chair/Desk \u00b7 SR\u1d43 \u2191",
+      "Full \u00b7 SCD \u2193",
+      "Full \u00b7 SR\u1d43 \u2191"
+    ],
+    "note": "Subset columns use equal-category averages. PA and SR are percentages. SR requires all parts correct; SR\u1d43 uses SCD < 0.02 before scaling. \u2020 Image-PA retrained on diagrams.",
+    "rows": [
+      [
+        {
+          "text": "3DHPA (CVPR'24)",
+          "bold": false
+        },
+        {
+          "text": "36.1",
+          "bold": false
+        },
+        {
+          "text": "2.971",
+          "bold": false
+        },
+        {
+          "text": "0.000",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Image-PA (ECCV'20)\u2020",
+          "bold": false
+        },
+        {
+          "text": "16.0",
+          "bold": false
+        },
+        {
+          "text": "27.91",
+          "bold": false
+        },
+        {
+          "text": "5.265",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Manual-PA (ICCV'25)",
+          "bold": false
+        },
+        {
+          "text": "8.1",
+          "bold": false
+        },
+        {
+          "text": "46.12",
+          "bold": false
+        },
+        {
+          "text": "9.650",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "21.6",
+          "bold": false
+        },
+        {
+          "text": "54.90",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "TwoByTwo (CVPR'25)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "221.7",
+          "bold": false
+        },
+        {
+          "text": "6.500",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "AssemLM (arXiv'26)",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "\u2014",
+          "bold": false
+        },
+        {
+          "text": "21.3",
+          "bold": false
+        },
+        {
+          "text": "81.00",
+          "bold": false
+        },
+        {
+          "text": "61.3",
+          "bold": false
+        },
+        {
+          "text": "69.60",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "GPT-6 Astra + Codex",
+          "bold": false
+        },
+        {
+          "text": "0.8",
+          "bold": true
+        },
+        {
+          "text": "93.27",
+          "bold": true
+        },
+        {
+          "text": "75.44",
+          "bold": true
+        },
+        {
+          "text": "1.0",
+          "bold": true
+        },
+        {
+          "text": "100.0",
+          "bold": true
+        },
+        {
+          "text": "0.9",
+          "bold": true
+        },
+        {
+          "text": "100.0",
+          "bold": true
+        }
+      ]
+    ]
+  },
+  {
+    "number": 4,
+    "title": "AssemblyBench",
+    "headers": ["Method", "N", "SCD \u2193", "PA \u2191", "SR \u2191"],
+    "note": "N counts evaluated objects. PA and SR are percentages; SCD is scaled by 1000. Astra is evaluated on 279 of 280 objects, excluding one refusal involving a dangerous item.",
+    "rows": [
+      [
+        {
+          "text": "Manual-PA (ICCV'25)",
+          "bold": false
+        },
+        {
+          "text": "280",
+          "bold": false
+        },
+        {
+          "text": "4.24",
+          "bold": false
+        },
+        {
+          "text": "70.04",
+          "bold": false
+        },
+        {
+          "text": "33.57",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "AssemblyDyno (CVPR'26)",
+          "bold": false
+        },
+        {
+          "text": "280",
+          "bold": false
+        },
+        {
+          "text": "3.91",
+          "bold": true
+        },
+        {
+          "text": "71.21",
+          "bold": false
+        },
+        {
+          "text": "34.64",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "Astra",
+          "bold": false
+        },
+        {
+          "text": "279",
+          "bold": false
+        },
+        {
+          "text": "8.54",
+          "bold": false
+        },
+        {
+          "text": "78.32",
+          "bold": true
+        },
+        {
+          "text": "55.91",
+          "bold": true
+        }
+      ]
+    ]
+  },
+  {
+    "number": 5,
+    "title": "Fantastic Breaks",
+    "headers": ["Method", "RE \u2193", "TE \u2193", "PA \u2191", "CD \u2193"],
+    "note": "RE is in degrees, PA in percent, and TE/CD are scaled by 100/1000. RE is Euler-angle RMSE for Jigsaw, PF++, GARF, and Astra; geodesic otherwise. Astra uses anchor alignment on 150 objects.",
+    "rows": [
+      [
+        {
+          "text": "Jigsaw (NeurIPS'23)",
+          "bold": false
+        },
+        {
+          "text": "26.30\u00b0",
+          "bold": false
+        },
+        {
+          "text": "6.43",
+          "bold": false
+        },
+        {
+          "text": "73.64",
+          "bold": false
+        },
+        {
+          "text": "10.47",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "PF++ (ICLR'25)",
+          "bold": false
+        },
+        {
+          "text": "20.68\u00b0",
+          "bold": false
+        },
+        {
+          "text": "4.37",
+          "bold": false
+        },
+        {
+          "text": "83.33",
+          "bold": false
+        },
+        {
+          "text": "6.68",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "GARF (ICCV'25)",
+          "bold": false
+        },
+        {
+          "text": "10.62\u00b0",
+          "bold": false
+        },
+        {
+          "text": "2.10",
+          "bold": false
+        },
+        {
+          "text": "91.00",
+          "bold": false
+        },
+        {
+          "text": "2.12",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "RPF (NeurIPS'25)",
+          "bold": false
+        },
+        {
+          "text": "6.32\u00b0",
+          "bold": false
+        },
+        {
+          "text": "2.18",
+          "bold": false
+        },
+        {
+          "text": "96.90",
+          "bold": false
+        },
+        {
+          "text": "2.53",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "TORA-CKA (ECCV'26)",
+          "bold": false
+        },
+        {
+          "text": "3.03\u00b0",
+          "bold": true
+        },
+        {
+          "text": "0.80",
+          "bold": false
+        },
+        {
+          "text": "97.28",
+          "bold": false
+        },
+        {
+          "text": "0.26",
+          "bold": false
+        }
+      ],
+      [
+        {
+          "text": "SARe-Gen (arXiv'26)",
+          "bold": false
+        },
+        {
+          "text": "7.78\u00b0",
+          "bold": false
+        },
+        {
+          "text": "0.35",
+          "bold": true
+        },
+        {
+          "text": "98.53",
+          "bold": true
+        },
+        {
+          "text": "0.23",
+          "bold": true
+        }
+      ],
+      [
+        {
+          "text": "Astra",
+          "bold": false
+        },
+        {
+          "text": "11.45\u00b0",
+          "bold": false
+        },
+        {
+          "text": "2.54",
+          "bold": false
+        },
+        {
+          "text": "91.67",
+          "bold": false
+        },
+        {
+          "text": "6.98",
+          "bold": false
+        }
+      ]
+    ]
+  }
+]

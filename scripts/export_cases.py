@@ -22,14 +22,14 @@ SELECTION = [
     ("fantastic-breaks-none", "00/00017", "Fracture 00/00017", True),
     ("assemblybench-manualbook", "1047", "Industrial assembly 1047", True),
     ("assemblybench-manualbook", "7355", "Industrial assembly 7355", True),
-    ("assemblybench-manualbook", "1386", "Industrial assembly 1386", True),
-    ("ikea-manualbook", "Chair/falholmen", "FALHOLMEN chair", True),
+    ("assemblybench-manualbook", "2465", "Industrial assembly 2465", True),
+    ("ikea-manualbook", "Desk/fredrik", "FREDRIK desk", True),
     ("ikea-manualbook", "Chair/jokkmokk", "JOKKMOKK chair", True),
     ("partnet-final-image", "23890", "PartNet object 23890", True),
-    ("partnet-final-image", "40074", "PartNet object 40074", True),
-    ("partnet-final-image", "23814", "PartNet object 23814", True),
-    ("fantastic-breaks-none", "05/05005", "Fracture 05/05005", True),
-    ("fantastic-breaks-none", "19/19003", "Fracture 19/19003", True),
+    ("partnet-final-image", "41673", "PartNet object 41673", True),
+    ("partnet-final-image", "22320", "PartNet object 22320", True),
+    ("fantastic-breaks-none", "02/02002", "Fracture 02/02002", True),
+    ("fantastic-breaks-none", "09/09022", "Fracture 09/09022", True),
 ]
 DATASETS = {
     "assemblybench-manualbook": ("AssemblyBench", "Industrial", "Assembly manual"),
@@ -130,7 +130,7 @@ def main():
     args = ap.parse_args()
     root = args.agent_root.resolve()
     catalog, audits = [], []
-    out = ROOT / "public/media/v2"
+    out = ROOT / "public/media/v3"
     for block, sid, title, publish in SELECTION:
         slug = block.split("-")[0] + "-" + sid.replace("/", "-").lower()
         target = out / slug
@@ -158,6 +158,10 @@ def main():
                 assert first_input["sha256"] == inp["sha256"], "Comparison requires identical initial archive"
                 assert first_input["manual"] == inp["manual"], "Comparison requires identical references"
             metrics = next(json.loads(l) for l in (run / ("evaluation/chamfer-v2/metrics.jsonl" if featured and block == "fantastic-breaks-none" else "evaluation/metrics.jsonl")).read_text().splitlines() if json.loads(l)["sample_id"] == sid)
+            if metrics["SR"] != 1:
+                if system == "gpt-6-astra":
+                    raise ValueError(f"Selected case is not successful: {sid}")
+                continue
             payload = export_run(sample / "final.episode.zip", metrics, cache)
             geometry = bytearray()
             for part in payload["parts"]:
@@ -169,11 +173,11 @@ def main():
                 geometry.extend(indices.tobytes())
             geometry_path = target / f"{system}.bin"
             geometry_path.write_bytes(geometry)
-            payload["geometry"] = dict(url=f"/media/v2/{slug}/{system}.bin", sha256=sha(geometry_path))
+            payload["geometry"] = dict(url=f"/media/v3/{slug}/{system}.bin", sha256=sha(geometry_path))
             run_path = target / f"{system}.json"
             write(run_path, payload)
             audits.append(dict(case=slug, system=system, **payload["validation"]))
-            variants.append(dict(id=system, label=label, url=f"/media/v2/{slug}/{system}.json", sha256=sha(run_path),
+            variants.append(dict(id=system, label=label, url=f"/media/v3/{slug}/{system}.json", sha256=sha(run_path),
                 runId=f"{collection}/{system}/{block}/{sid}", PA=metrics["PA"], SR=metrics["SR"], SCD=metrics["SCD"],
                 episodeSHA256=metrics["episode_sha256"], calls=len(payload["calls"])))
             if first_input is None:
@@ -198,8 +202,8 @@ def main():
         catalog.append(dict(id=slug, title=title, dataset=dataset, domain=domain, reference=reference, sampleId=sid,
             parts=first_input["parts"], revision=first_input["revision"], source=f'https://huggingface.co/datasets/{cache["key"]["identity"]["dataset"]}',
             publish=publish, featured=featured, licenseStatus="Non-commercial research; original source terms retained; research display permission confirmed by project owner on 2026-09-29", clearanceEvidence="docs/asset-clearance.md",
-            initial=f"/media/v2/{slug}/initial.episode.zip", initialSHA256=first_input["sha256"],
-            manual=f"/media/v2/{slug}/reference.html", thumbnail=f"/media/v2/{slug}/preview.png", variants=variants))
+            initial=f"/media/v3/{slug}/initial.episode.zip", initialSHA256=first_input["sha256"],
+            manual=f"/media/v3/{slug}/reference.html", thumbnail=f"/previews/{slug}.png", variants=variants))
         print(slug, len(variants), flush=True)
     write(ROOT / "public/catalog.local.json", dict(version=1, cases=catalog))
     write(ROOT / "public/catalog.json", dict(version=1, cases=[c for c in catalog if c["publish"]]))
