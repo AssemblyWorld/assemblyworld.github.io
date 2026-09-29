@@ -7,7 +7,8 @@ const ENV = "https://assemblyworld.github.io/3DWebAgent/";
 const README =
   "https://github.com/AssemblyWorld/3DWebAgent#connect-through-webmcp";
 const CODE = "https://github.com/AssemblyWorld/assembly-world-agent";
-const DATA = "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench";
+const DATA =
+  "https://github.com/AssemblyWorld/assembly-world-agent/tree/main/benchmarks/assemblyworldbench";
 const authors = [
   ["Jiahao Zhang", "1,*"],
   ["Yeying Fan", "3,*"],
@@ -557,6 +558,14 @@ function App() {
               <p>Task definitions and source-specific dataset access.</p>
             </a>
           </div>
+          <p>
+            <a
+              className="inline-link"
+              href="https://huggingface.co/AssemblyWorld"
+            >
+              Browse the source datasets on Hugging Face ↗
+            </a>
+          </p>
           <div className="citation">
             <div>
               <h3>Cite this work</h3>
