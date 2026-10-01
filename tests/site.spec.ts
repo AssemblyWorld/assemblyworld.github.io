@@ -114,7 +114,7 @@ test("all twelve successful examples expose their complete recorded timeline", a
   }
 });
 
-test("dataset tabs, paper examples, author links and unpublished paper", async ({
+test("dataset tabs, paper examples, author links and published paper", async ({
   page,
 }) => {
   await page.goto("/");
@@ -149,12 +149,8 @@ test("dataset tabs, paper examples, author links and unpublished paper", async (
   await expect(page.locator(".case-card")).toHaveCount(12);
   await expect(page.locator(".authors a")).toHaveCount(8);
   await expect(page.locator(".affiliations a")).toHaveCount(4);
-  await expect(
-    page.locator(".hero-actions .unavailable").first(),
-  ).toContainText("Paper");
-  await expect(
-    page.locator(".hero-actions .unavailable").first(),
-  ).toHaveAttribute("aria-disabled", "true");
+  await expect(page.getByRole("link", { name: "Paper", exact: true }))
+    .toHaveAttribute("href", "https://arxiv.org/abs/2609.40353");
   await expect(page.locator('a[href*="paper.pdf"]')).toHaveCount(0);
   await expect(
     page.locator('.hero-actions a[href$="AssemblyWorldBench-Results"]'),
@@ -336,7 +332,7 @@ test("concise hero and camera frame follow the active viewport", async ({
   ).toHaveCount(0);
   await expect(page.locator(".gallery-toolbar")).toContainText("12 assemblies");
   await expect(page.locator(".citation pre")).toContainText(
-    "journal = {arXiv preprint arXiv:YYMM.NNNNN}",
+    "journal = {arXiv preprint arXiv:2609.40353}",
   );
   await expect(page.locator(".citation pre")).toContainText(
     "url = {https://assemblyworld.github.io/}",

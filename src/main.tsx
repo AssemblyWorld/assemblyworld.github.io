@@ -31,7 +31,7 @@ const bib = `@article{zhang2026assemblyworld,
             Lohit, Suhas and Egger, Bernhard and Marks, Tim K. and
             Cherian, Anoop and Gould, Stephen},
   year = {2026},
-  journal = {arXiv preprint arXiv:YYMM.NNNNN},
+  journal = {arXiv preprint arXiv:2609.40353},
   url = {https://assemblyworld.github.io/}
 }`;
 function Copy({
