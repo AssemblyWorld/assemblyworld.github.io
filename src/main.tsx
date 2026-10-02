@@ -7,7 +7,7 @@ import "./style.css";
 const ENV = "https://assemblyworld.github.io/3DWebAgent/";
 const README =
   "https://github.com/AssemblyWorld/3DWebAgent#connect-through-webmcp";
-const CODE = "https://github.com/AssemblyWorld/assembly-world-agent";
+const CODE = "https://github.com/AssemblyWorld/assembly-world-bench";
 const DATA = "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench";
 const RESULTS =
   "https://huggingface.co/datasets/AssemblyWorld/AssemblyWorldBench-Results";
@@ -253,18 +253,9 @@ function App() {
                   </span>
                 </button>
               )}
-              <button
-                className="button unavailable paper-pending code-pending"
-                aria-label="Code"
-                aria-disabled="true"
-                aria-describedby="code-coming"
-                data-repository="https://github.com/AssemblyWorld/assembly-world-agent"
-              >
-                Code
-                <span className="paper-tooltip" id="code-coming" role="tooltip">
-                  Coming soon
-                </span>
-              </button>
+              <a className="button" href={CODE} data-umami-event="open-code">
+                Code ↗
+              </a>
               <a className="button" href={DATA}>
                 Benchmark ↗
               </a>
