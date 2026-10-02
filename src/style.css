@@ -1774,13 +1774,6 @@ h3 {
   outline: 2px solid #514760;
   outline-offset: 2px;
 }
-.resource-grid > .resource-pending {
-  padding: 28px 0;
-}
-.resource-pending > span {
-  color: var(--muted);
-  font-size: 11px;
-}
 @media (max-width: 850px) {
   .scene-modes {
     gap: 18px;

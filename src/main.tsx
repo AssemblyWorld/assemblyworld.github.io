@@ -558,11 +558,11 @@ function App() {
               <h3>3D environment ↗</h3>
               <p>Browser-based interaction and the episode format.</p>
             </a>
-            <div className="resource-pending">
+            <a href={CODE} data-umami-event="open-code">
               <span>02</span>
-              <h3>Agent & evaluation</h3>
-              <p>Code release coming soon.</p>
-            </div>
+              <h3>Agent & evaluation ↗</h3>
+              <p>Run agents and compute official benchmark scores.</p>
+            </a>
             <a href={DATA}>
               <span>03</span>
               <h3>Benchmark & data ↗</h3>

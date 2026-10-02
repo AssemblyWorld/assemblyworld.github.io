@@ -313,7 +313,7 @@ test("camera switches default on and orientation compass selects a free axis vie
   ).toHaveText("Benchmark ↗");
   await expect(
     page.locator(
-      '.nav-code[href="https://github.com/AssemblyWorld/assembly-world-agent"]',
+      '.nav-code[href="https://github.com/AssemblyWorld/assembly-world-bench"]',
     ),
   ).toHaveCount(1);
 });
@@ -348,7 +348,7 @@ test("concise hero and camera frame follow the active viewport", async ({
   await expect(page.getByRole("tooltip")).toBeVisible();
 });
 
-test("Code is a pending agent-repository button and a click keeps camera follow", async ({
+test("Code links point to the published benchmark repository", async ({
   page,
 }) => {
   await page.goto("/");
@@ -357,14 +357,14 @@ test("Code is a pending agent-repository button and a click keeps camera follow"
   await expect(
     page.getByRole("switch", { name: "Follow agent camera", exact: true }),
   ).toBeChecked();
-  const code = page.getByRole("button", { name: "Code", exact: true });
-  await expect(code).toHaveAttribute("aria-disabled", "true");
-  await expect(code).toHaveAttribute(
-    "data-repository",
-    "https://github.com/AssemblyWorld/assembly-world-agent",
-  );
-  await code.focus();
-  await expect(page.locator("#code-coming")).toBeVisible();
+  const repository = "https://github.com/AssemblyWorld/assembly-world-bench";
+  const code = page.getByRole("link", { name: "Code ↗", exact: true });
+  await expect(code).toHaveAttribute("href", repository);
+  await expect(page.locator(".nav-code")).toHaveAttribute("href", repository);
+  await expect(
+    page.getByRole("link", { name: /Agent & evaluation ↗/ }),
+  ).toHaveAttribute("href", repository);
+  await expect(page.getByText("Code release coming soon.")).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "Environment code ↗", exact: true }),
   ).toHaveCount(0);
